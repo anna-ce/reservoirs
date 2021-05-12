@@ -37,6 +37,7 @@ var GetSitesNow = function(){
           for(var i=0; i< mySites.length; ++i){
             if(mySites[i]['sitename'].includes("Presa") || mySites[i]['sitename'].includes("presa") ){
                 myGoodSites.push(mySites[i]);
+                // do it here//
             }
           }
 
