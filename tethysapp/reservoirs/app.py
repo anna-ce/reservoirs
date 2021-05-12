@@ -11,7 +11,7 @@ class Reservoirs(TethysAppBase):
     icon = 'reservoirs/images/icon.gif'
     package = 'reservoirs'
     root_url = 'reservoirs'
-    color = '#8e44ad'
+    color = '#ff17e8'
     description = ''
     tags = ''
     enable_feedback = False
