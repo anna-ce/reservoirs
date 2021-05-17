@@ -1,6 +1,19 @@
 #mapid {
-    height:600px;
+    height:720px;
     width:100%;
     margin: 0;
     padding: 0;
+    border: 35%;
+    border-style: solid;
+    border-color: black;
+}
+
+html, body {
+
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #cae0da;
+
 }
