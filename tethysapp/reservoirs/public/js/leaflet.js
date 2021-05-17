@@ -18,8 +18,40 @@ var map = L.map('mapid', {
 });
 
 
-
 var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
 var Esri_Imagery_Labels = L.esri.basemapLayer('ImageryLabels');
 basemaps = {"Basemap": L.layerGroup([Esri_WorldImagery, Esri_Imagery_Labels]).addTo(map)}
 
+ //gets reservoirs from hydroserver//
+var GetSitesNow = function(){
+     $.ajax({
+          type: "GET",
+          url: "getMySites/",
+          dataType: "JSON",
+          success: function(result) {
+          var mySites = result.siteInfo;
+          var myGoodSites = [];
+          var marker
+
+          for(var i=0; i< mySites.length; ++i){
+            if(mySites[i]['sitename'].includes("Presa") || mySites[i]['sitename'].includes("presa") ){
+                myGoodSites.push(mySites[i]);
+            }}
+            for(var i=0; i< myGoodSites.length; ++i){
+                var markerLocation = new L.LatLng(myGoodSites[i]['latitude'], myGoodSites[i]['longitude']);
+                marker = new L.Marker(markerLocation);
+                marker.bindPopup(myGoodSites[i]['sitename']);
+                map.addLayer(marker)
+            }}
+     })
+}
+GetSitesNow()
+
+//
+//                lyrControls = L.control.layers(basemaps).addTo(map);
+//                  function onEachFeature(feature, layer) {
+//                  layer.bindPopup(feature.siteInfo.sitename);
+//                }
+//                L.geoJSON(myGoodSites, {
+//                    onEachFeature: onEachFeature,
+//                }).addTo(map);
