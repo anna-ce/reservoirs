@@ -7,9 +7,16 @@
   </div>
 {% endblock %}
 
+{% block app_navigation_items %}
+  <li class="title">Select a Reservoir Location</li>
+    {% gizmo select_input variables %}
+{% endblock %}
+
 {% block app_content %}
   <div id="mapid"></div>
 {% endblock %}
+
+
 
 {# Use the after_app_content block for modals #}
 {% block after_app_content %}

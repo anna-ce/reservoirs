@@ -28,21 +28,23 @@ var GetSitesNow = function(){
           type: "GET",
           url: "getMySites/",
           dataType: "JSON",
+
           success: function(result) {
           var mySites = result.siteInfo;
           var myGoodSites = [];
-          var marker
 
           for(var i=0; i< mySites.length; ++i){
             if(mySites[i]['sitename'].includes("Presa") || mySites[i]['sitename'].includes("presa") ){
                 myGoodSites.push(mySites[i]);
             }}
+
             for(var i=0; i< myGoodSites.length; ++i){
                 var markerLocation = new L.LatLng(myGoodSites[i]['latitude'], myGoodSites[i]['longitude']);
                 marker = new L.Marker(markerLocation);
                 marker.bindPopup(myGoodSites[i]['sitename']);
                 map.addLayer(marker)
-            }}
+            }
+          }
      })
 }
 GetSitesNow()
