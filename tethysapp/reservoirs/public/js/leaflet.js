@@ -48,12 +48,3 @@ var GetSitesNow = function(){
      })
 }
 GetSitesNow()
-
-//
-//                lyrControls = L.control.layers(basemaps).addTo(map);
-//                  function onEachFeature(feature, layer) {
-//                  layer.bindPopup(feature.siteInfo.sitename);
-//                }
-//                L.geoJSON(myGoodSites, {
-//                    onEachFeature: onEachFeature,
-//                }).addTo(map);

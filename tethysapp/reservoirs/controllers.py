@@ -20,9 +20,15 @@ def home(request):
     url = "http://128.187.106.131/app/index.php/dr/services/cuahsi_1_1.asmx?WSDL"
     water = pwml.WaterMLOperations(url=url)
     sites = water.GetSites()
-    sites_js = json.dumps(sites)
-    print(sites_js)
+    json_sites = json.dumps(sites)
+    print(json_sites)
 
+    options = [('None', 'none')]
+    data = json.load(sites)
+    features = data.get('features')
+    for feature in features:
+            newOption = (feature.get('siteInfo').get('sitename'), feature.get('siteInfo').get('siteID'))
+            options.append(newOption)
     variables = SelectInput(
         display_text='Select a Reservoir',
         name='variables',
