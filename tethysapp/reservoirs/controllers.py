@@ -7,35 +7,38 @@ from django.shortcuts import render
 from tethys_sdk.gizmos import SelectInput, RangeSlider
 from tethys_sdk.permissions import login_required
 from tethys_sdk.workspaces import app_workspace
-
+import numpy as np
 import json
+import pandas as pd
 
 
 @login_required()
 def home(request):
+
     """
     Controller for the app home page.
     """
-
+    return_object = {}
     url = "http://128.187.106.131/app/index.php/dr/services/cuahsi_1_1.asmx?WSDL"
     water = pwml.WaterMLOperations(url=url)
     sites = water.GetSites()
-    json_sites = json.dumps(sites)
-    print(json_sites)
+    df_sites = pd.DataFrame.from_dict(sites)
+    site_name = df_sites['sitename']
 
-    options = [('None', 'none')]
-    data = json.load(sites)
-    features = data.get('features')
-    for feature in features:
-            newOption = (feature.get('siteInfo').get('sitename'), feature.get('siteInfo').get('siteID'))
-            options.append(newOption)
+    sites_presa = [('None', 'none')]
+    x=1
+    for site in site_name:
+        if 'Presa' in site:
+            reservoir = (site, x)
+            sites_presa.append(reservoir)
+            x = x + 1
+
     variables = SelectInput(
         display_text='Select a Reservoir',
         name='variables',
         multiple=False,
         original=True,
-        options=(('testing', '1'),
-        ),
+        options=tuple(sites_presa)
     )
 
     context = {
@@ -43,7 +46,6 @@ def home(request):
     }
 
     return render(request, 'reservoirs/home.html', context)
-
 
 def GetSites(request):
 

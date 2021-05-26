@@ -32,6 +32,7 @@ var GetSitesNow = function(){
           success: function(result) {
           var mySites = result.siteInfo;
           var myGoodSites = [];
+          console.log(result)
 
           for(var i=0; i< mySites.length; ++i){
             if(mySites[i]['sitename'].includes("Presa") || mySites[i]['sitename'].includes("presa") ){
