@@ -9,6 +9,8 @@
 //    .openPopup();
 //
 
+
+
 var map = L.map('mapid', {
     zoom: 8.25,
     minZoom: 1.25,
@@ -31,11 +33,10 @@ var GetSitesNow = function(){
 
           success: function(result) {
           var mySites = result.siteInfo;
-          var myGoodSites = [];
-          console.log(result)
+          let myGoodSites = []
 
           for(var i=0; i< mySites.length; ++i){
-            if(mySites[i]['sitename'].includes("Presa") || mySites[i]['sitename'].includes("presa") ){
+            if(mySites[i]['sitename'].includes("Presa") || mySites[i]['sitename'].includes("presa")){
                 myGoodSites.push(mySites[i]);
             }}
 
@@ -44,8 +45,27 @@ var GetSitesNow = function(){
                 marker = new L.Marker(markerLocation);
                 marker.bindPopup(myGoodSites[i]['sitename']);
                 map.addLayer(marker)
+                //add something here that zooms to marker with associated reservoir name or chooses reservoir name on dropdown list if you click on the reservoir marker
             }
           }
      })
 }
+
+
+function load_timeseries() {
+    let myreservoir = $("#variables").val();
+    console.log(myreservoir);
+    if (myreservoir === 'none') {
+        alert("You have not selected a reservoir");
+    } else {
+        $("#obsgraph").modal('show');
+
+    }}
+
+$("#timeseries").click(function() {
+    load_timeseries();
+})
+
+
 GetSitesNow()
+

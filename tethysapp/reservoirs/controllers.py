@@ -18,7 +18,7 @@ def home(request):
     """
     Controller for the app home page.
     """
-    return_object = {}
+
     url = "http://128.187.106.131/app/index.php/dr/services/cuahsi_1_1.asmx?WSDL"
     water = pwml.WaterMLOperations(url=url)
     sites = water.GetSites()
@@ -54,5 +54,25 @@ def GetSites(request):
     water = pwml.WaterMLOperations(url=url)
     sites = water.GetSites()
     return_object['siteInfo'] = sites
+
+    ##PLOT THE TIME SERIES
+    timeStamps = []
+    valuesTimeSeries = []
+    for index in variableResponse['values']:
+        timeStamps.append(index['dateTimeUTC'])
+        valuesTimeSeries.append(index['dataValue'])
+
+    fig = go.Figure(data=go.Scatter(x=timeStamps, y=valuesTimeSeries))
+    # Edit the layout
+    fig.update_layout(title=variableResponse['values'][VARIABLE]['Water Elevation'],
+                      xaxis_title=variableResponse['values'][VARIABLE]['day'],
+                      yaxis_title=variableResponse['values'][VARIABLE]['m'])
+    fig.show()
+
+    df = pd.DataFrame(dict(
+        data=valuesTimeSeries
+    ))
+    fig = px.box(df, y="data", points="all")
+    fig.show()
 
     return JsonResponse(return_object)

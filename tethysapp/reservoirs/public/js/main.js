@@ -9,3 +9,11 @@
 //                return obj.siteInfo.sitename == filter_sites;
 //            });
 
+//function load_timeseries() {
+//    let reservoir = $("#variables")
+//}
+//
+//
+//$("#timeseries").click(function() {
+//    load_timeseries()
+//})
