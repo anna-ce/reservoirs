@@ -50,7 +50,7 @@ var GetSitesNow = function(){
           }
      })
 }
-
+GetSitesNow()
 
 function load_timeseries() {
     let myreservoir = $("#variables").val();
@@ -67,5 +67,5 @@ $("#timeseries").click(function() {
 })
 
 
-GetSitesNow()
+
 

@@ -56,23 +56,23 @@ def GetSites(request):
     return_object['siteInfo'] = sites
 
     ##PLOT THE TIME SERIES
-    timeStamps = []
-    valuesTimeSeries = []
-    for index in variableResponse['values']:
-        timeStamps.append(index['dateTimeUTC'])
-        valuesTimeSeries.append(index['dataValue'])
-
-    fig = go.Figure(data=go.Scatter(x=timeStamps, y=valuesTimeSeries))
-    # Edit the layout
-    fig.update_layout(title=variableResponse['values'][VARIABLE]['Water Elevation'],
-                      xaxis_title=variableResponse['values'][VARIABLE]['day'],
-                      yaxis_title=variableResponse['values'][VARIABLE]['m'])
-    fig.show()
-
-    df = pd.DataFrame(dict(
-        data=valuesTimeSeries
-    ))
-    fig = px.box(df, y="data", points="all")
-    fig.show()
-
+    # timeStamps = []
+    # valuesTimeSeries = []
+    # for index in variableResponse['values']:
+    #     timeStamps.append(index['dateTimeUTC'])
+    #     valuesTimeSeries.append(index['dataValue'])
+    #
+    # fig = go.Figure(data=go.Scatter(x=timeStamps, y=valuesTimeSeries))
+    # # Edit the layout
+    # fig.update_layout(title=variableResponse['values'][VARIABLE]['Water Elevation'],
+    #                   xaxis_title=variableResponse['values'][VARIABLE]['day'],
+    #                   yaxis_title=variableResponse['values'][VARIABLE]['m'])
+    # fig.show()
+    #
+    # df = pd.DataFrame(dict(
+    #     data=valuesTimeSeries
+    # ))
+    # fig = px.box(df, y="data", points="all")
+    # fig.show()
+    #
     return JsonResponse(return_object)
