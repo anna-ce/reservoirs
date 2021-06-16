@@ -1,14 +1,3 @@
-//var map = L.map('mapid').setView([51.505, -0.09], 13);
-//
-//L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-//    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-//}).addTo(map);
-//
-//L.marker([51.5, -0.09]).addTo(map)
-//    .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
-//    .openPopup();
-//
-
 
 
 var map = L.map('mapid', {
@@ -18,6 +7,24 @@ var map = L.map('mapid', {
     maxBounds: L.latLngBounds(L.latLng(-100.0,-270.0), L.latLng(100.0, 270.0)),
     center: [19, -70.6],
 });
+
+
+//let latlon = L.control({ position: "bottomleft" })
+//latlon.onAdd = function() {
+//    let div = L.DomUtil.create("div", "well well-sm")
+//    div.innerHTML = '<div id="mouse-position" style="text-align: center"></div>'
+//    return div
+//}
+//
+//const mapObj = map() // used by legend and draw controls
+//const basemapObj = basemaps() // used in the make controls function
+//mapObj.on("mousemove", function(event) {
+//    $("#mouse-position").html(
+//        "Lat: " + event.latlng.lat.toFixed(5) + ", Lon: " + event.latlng.lng.toFixed(5)
+//    )
+//})
+//
+//latlon.addTo(mapObj)
 
 
 var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
@@ -67,5 +74,44 @@ $("#timeseries").click(function() {
 })
 
 
+$("#variables").change(function() {
 
+    let curres = $("#variables").val()
+    id = curres
+
+    if (id == "none") {
+        map.fitBounds(L.latLngBounds(L.latLng(20.178299, -72.084407), L.latLng(17.609021, -68.267347)))
+    } else {
+        $.ajax({
+            type: "GET",
+            url: "getMySites/",
+            dataType: "JSON",
+
+            success: function(result) {
+                var mySites = result.siteInfo;
+                let myGoodSites = []
+
+                for(var i=0; i< mySites.length; ++i){
+                    if (mySites[i]['sitename'].includes("Presa") || mySites[i]['sitename'].includes("presa")) {
+                        myGoodSites.push(mySites[i]);
+                    }}
+
+                for (var i=0; i<myGoodSites.length; ++i) {
+                    if (id == i) {
+                        mylat = myGoodSites[i]['latitude']
+                        mylong = myGoodSites[i]['longitude']
+                        map.fitBounds(l.latLng(mylat, mylong))
+                    }
+                }
+            }
+        })
+    }
+})
+//        statesFeatureGroup.eachLayer(function(layer) {
+//            if (layer.feature.properties.id == id) {
+//                matched_layer = layer
+//            }
+//        })
+//
+//        mapObj.fitBounds(matched_layer.getBounds())
 

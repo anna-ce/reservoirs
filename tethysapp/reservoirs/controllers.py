@@ -55,7 +55,7 @@ def GetSites(request):
     sites = water.GetSites()
     return_object['siteInfo'] = sites
 
-    ##PLOT THE TIME SERIES
+    #PLOT THE TIME SERIES
     # timeStamps = []
     # valuesTimeSeries = []
     # for index in variableResponse['values']:
@@ -74,5 +74,5 @@ def GetSites(request):
     # ))
     # fig = px.box(df, y="data", points="all")
     # fig.show()
-    #
+
     return JsonResponse(return_object)
