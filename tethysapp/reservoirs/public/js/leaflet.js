@@ -31,33 +31,33 @@ var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest
 var Esri_Imagery_Labels = L.esri.basemapLayer('ImageryLabels');
 basemaps = {"Basemap": L.layerGroup([Esri_WorldImagery, Esri_Imagery_Labels]).addTo(map)}
 
- //gets reservoirs from hydroserver//
-var GetSitesNow = function(){
-     $.ajax({
-          type: "GET",
-          url: "getMySites/",
-          dataType: "JSON",
+//gets reservoirs from hydroserver//
+//var GetSitesNow = function(){
+//     $.ajax({
+//          type: "GET",
+//          url: "getMySites/",
+//          dataType: "JSON",
+//
+//          success: function(result) {
+//          var mySites = result.siteInfo;
+//          let myGoodSites = []
+//
+//          for(var i=0; i< mySites.length; ++i){
+//            if(mySites[i]['sitename'].includes("Presa") || mySites[i]['sitename'].includes("presa")){
+//                myGoodSites.push(mySites[i]);
+//            }}
+//
+//            for(var i=0; i< myGoodSites.length; ++i){
+//                var markerLocation = new L.LatLng(myGoodSites[i]['latitude'], myGoodSites[i]['longitude']);
+//                marker = new L.Marker(markerLocation);
+//                marker.bindPopup(myGoodSites[i]['sitename']);
+//                map.addLayer(marker)
+//                //add something here that zooms to marker with associated reservoir name or chooses reservoir name on dropdown list if you click on the reservoir marker
+//            }
+//          }
+//     })
+//}
 
-          success: function(result) {
-          var mySites = result.siteInfo;
-          let myGoodSites = []
-
-          for(var i=0; i< mySites.length; ++i){
-            if(mySites[i]['sitename'].includes("Presa") || mySites[i]['sitename'].includes("presa")){
-                myGoodSites.push(mySites[i]);
-            }}
-
-            for(var i=0; i< myGoodSites.length; ++i){
-                var markerLocation = new L.LatLng(myGoodSites[i]['latitude'], myGoodSites[i]['longitude']);
-                marker = new L.Marker(markerLocation);
-                marker.bindPopup(myGoodSites[i]['sitename']);
-                map.addLayer(marker)
-                //add something here that zooms to marker with associated reservoir name or chooses reservoir name on dropdown list if you click on the reservoir marker
-            }
-          }
-     })
-}
-GetSitesNow()
 
 function load_timeseries() {
     let myreservoir = $("#variables").val();
@@ -73,40 +73,49 @@ $("#timeseries").click(function() {
     load_timeseries();
 })
 
+var GetSitesNow = function(){
+    $.ajax({
+        type: "GET",
+        url: "getMySites/",
+        dataType: "JSON",
 
-$("#variables").change(function() {
+        success: function(result) {
+            var mySites = result.siteInfo;
+            let myGoodSites = []
 
-    let curres = $("#variables").val()
-    id = curres
+            for(var i=0; i< mySites.length; ++i){
+                if (mySites[i]['sitename'].includes("Presa") || mySites[i]['sitename'].includes("presa")) {
+                    myGoodSites.push(mySites[i]);
+                }}
 
-    if (id == "none") {
-        map.fitBounds(L.latLngBounds(L.latLng(20.178299, -72.084407), L.latLng(17.609021, -68.267347)))
-    } else {
-        $.ajax({
-            type: "GET",
-            url: "getMySites/",
-            dataType: "JSON",
+            for(var i=0; i< myGoodSites.length; ++i){
+                var markerLocation = new L.LatLng(myGoodSites[i]['latitude'], myGoodSites[i]['longitude']);
+                marker = new L.Marker(markerLocation);
+                marker.bindPopup(myGoodSites[i]['sitename']);
+                map.addLayer(marker)
+            }
 
-            success: function(result) {
-                var mySites = result.siteInfo;
-                let myGoodSites = []
+            $("#variables").change(function() {
 
-                for(var i=0; i< mySites.length; ++i){
-                    if (mySites[i]['sitename'].includes("Presa") || mySites[i]['sitename'].includes("presa")) {
-                        myGoodSites.push(mySites[i]);
-                    }}
+                let curres = $("#variables").val()
+                id = curres
 
-                for (var i=0; i<myGoodSites.length; ++i) {
-                    if (id == i) {
-                        mylat = myGoodSites[i]['latitude']
-                        mylong = myGoodSites[i]['longitude']
-                        map.fitBounds(l.latLng(mylat, mylong))
+                if (id == "none") {
+                    map.fitBounds(L.latLngBounds(L.latLng(20.178299, -72.084407), L.latLng(17.609021, -68.267347)))
+                } else {
+                    for (var i=0; i<myGoodSites.length; ++i) {
+                        if (id == i) {
+                            mylat = myGoodSites[i]['latitude']
+                            mylong = myGoodSites[i]['longitude']
+                            map.fitBounds(l.latLng(mylat, mylong))
+                        }
                     }
                 }
-            }
-        })
-    }
-})
+            })
+        }
+    })
+}
+GetSitesNow()
 //        statesFeatureGroup.eachLayer(function(layer) {
 //            if (layer.feature.properties.id == id) {
 //                matched_layer = layer
