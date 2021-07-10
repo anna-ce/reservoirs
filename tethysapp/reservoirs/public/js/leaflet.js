@@ -1,5 +1,4 @@
 
-
 var map = L.map('mapid', {
     zoom: 8.25,
     minZoom: 1.25,
@@ -13,19 +12,29 @@ var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest
 var Esri_Imagery_Labels = L.esri.basemapLayer('ImageryLabels');
 basemaps = {"Basemap": L.layerGroup([Esri_WorldImagery, Esri_Imagery_Labels]).addTo(map)}
 
+var GetSiteInfo = function(){
+    $.ajax({
+        type: "GET",
+        url: "GetSiteInfo/",
+        dataType: "JSON",
 
-function load_timeseries() {
-    let myreservoir = $("#variables").val();
-    if (myreservoir === 'none') {
-        alert("You have not selected a reservoir");
-    } else {
-        $("#obsgraph").modal('show');
+        success: function(result) {
 
-    }}
+            var myInfo =result.siteInfo;
+            const myOtherSites = [];
 
-$("#timeseries").click(function() {
-    load_timeseries();
-})
+ //           console.log(typeof result);
+//            console.log(typeof myInfo);
+
+            for(var i=0; i< myInfo.length; ++i){
+                if (myInfo[i]['sitename'].includes("Presa") || myInfo[i]['sitename'].includes("presa")) {
+                    myOtherSites.push(myInfo[i]);
+                }
+            }
+            console.log(myOtherSites)
+        }
+    })
+}
 
 var GetSitesNow = function(){
     $.ajax({
@@ -34,14 +43,16 @@ var GetSitesNow = function(){
         dataType: "JSON",
 
         success: function(result) {
+
             var mySites = result.siteInfo;
-            const myGoodSites = []
+            const myGoodSites = [];
+
+ //           console.log(typeof mySites);
 
             for(var i=0; i< mySites.length; ++i){
                 if (mySites[i]['sitename'].includes("Presa") || mySites[i]['sitename'].includes("presa")) {
                     myGoodSites.push(mySites[i]);
                 }}
-
 
             for(var i=0; i< myGoodSites.length; ++i){
                 var markerLocation = new L.LatLng(myGoodSites[i]['latitude'], myGoodSites[i]['longitude']);
@@ -73,6 +84,21 @@ var GetSitesNow = function(){
         }
     })
 }
+GetSiteInfo()
 GetSitesNow()
 
+function load_timeseries() {
+    let myreservoir = $("#variables").val();
+    if (myreservoir === 'none') {
+        alert("You have not selected a reservoir");
+    } else {
+        GetSitesNow()
+        console.log(myinfo)
+        $("#obsgraph").modal('show');
+        $("#siteinfo").html(`<h1>${myinfo}</h1>`);
+    }}
+
+$("#timeseries").click(function() {
+    load_timeseries();
+})
 

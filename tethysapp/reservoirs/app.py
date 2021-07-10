@@ -34,7 +34,11 @@ class Reservoirs(TethysAppBase):
                 url='getMySites/',
                 controller='reservoirs.controllers.GetSites'
             ),
-
+            UrlMap(
+                name='GetSiteInfo',
+                url='GetSiteInfo/',
+                controller='reservoirs.controllers.GetInfo'
+            ),
         )
 
         return url_maps
