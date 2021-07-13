@@ -12,29 +12,42 @@ var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest
 var Esri_Imagery_Labels = L.esri.basemapLayer('ImageryLabels');
 basemaps = {"Basemap": L.layerGroup([Esri_WorldImagery, Esri_Imagery_Labels]).addTo(map)}
 
-var GetSiteInfo = function(){
-    $.ajax({
-        type: "GET",
-        url: "GetSiteInfo/",
-        dataType: "JSON",
 
-        success: function(result) {
-
-            var myInfo =result.siteInfo;
-            const myOtherSites = [];
-
- //           console.log(typeof result);
-//            console.log(typeof myInfo);
-
-            for(var i=0; i< myInfo.length; ++i){
-                if (myInfo[i]['sitename'].includes("Presa") || myInfo[i]['sitename'].includes("presa")) {
-                    myOtherSites.push(myInfo[i]);
-                }
-            }
-            console.log(myOtherSites)
-        }
-    })
-}
+//var GetSiteInfo = function(){
+//    $.ajax({
+//        type: "GET",
+//        url: "GetSiteInfo/",
+//        dataType: "JSON",
+//
+//        success: function(result) {
+//
+//            var myInfo =result.siteInfo;
+//            const myOtherSites = [];
+//
+//            for(var i=0; i< myInfo.length; ++i){
+//                if (myInfo[i]['siteInfo'][0]['siteName'].includes("Presa") || myInfo[i]['siteInfo'][0]['siteName'].includes("presa")) {
+//                    myOtherSites.push(myInfo[i]);
+//                }
+//            }
+//            console.log('i was run');
+//
+//            $("#timeseries").click(function() {
+//                let curres = $("#variables").val();
+//                id = curres;
+//
+//                for (var i=0; i<myOtherSites.length; ++i) {
+//
+//                    if (id == i+1) {
+//                        let MyGoodInfo = myOtherSites[i];
+//                        console.log(MyGoodInfo)
+//                    return MyGoodInfo
+//                    }
+//                }
+//            })
+//        }
+//    })
+//}
+//GetSiteInfo();
 
 var GetSitesNow = function(){
     $.ajax({
@@ -47,7 +60,7 @@ var GetSitesNow = function(){
             var mySites = result.siteInfo;
             const myGoodSites = [];
 
- //           console.log(typeof mySites);
+//           console.log(mySites);
 
             for(var i=0; i< mySites.length; ++i){
                 if (mySites[i]['sitename'].includes("Presa") || mySites[i]['sitename'].includes("presa")) {
@@ -84,19 +97,65 @@ var GetSitesNow = function(){
         }
     })
 }
-GetSiteInfo()
-GetSitesNow()
+GetSitesNow();
 
 function load_timeseries() {
     let myreservoir = $("#variables").val();
     if (myreservoir === 'none') {
-        alert("You have not selected a reservoir");
+//        alert("You have not selected a reservoir");
     } else {
-        GetSitesNow()
-        console.log(myinfo)
+
         $("#obsgraph").modal('show');
-        $("#siteinfo").html(`<h1>${myinfo}</h1>`);
-    }}
+        $("#siteinfo").html('');
+
+        $.ajax({
+        type: "GET",
+        url: "GetSiteInfo/",
+        dataType: "JSON",
+
+        success: function(result) {
+
+            var myInfo =result.siteInfo;
+            const myOtherSites = [];
+
+            for(var i=0; i< myInfo.length; ++i){
+                if (myInfo[i]['siteInfo'][0]['siteName'].includes("Presa") || myInfo[i]['siteInfo'][0]['siteName'].includes("presa")) {
+                    myOtherSites.push(myInfo[i]);
+                }
+            }
+
+            for (var i=0; i<myOtherSites.length; ++i) {
+
+                if (myreservoir == i) { break; }
+
+                    let MyGoodInfo = myOtherSites[i];
+                    console.log(MyGoodInfo.siteInfo)
+                    let mysitename = MyGoodInfo.siteInfo[0].siteName;
+                    let sitecode = MyGoodInfo.siteInfo[0].siteCode;
+                    let citation = MyGoodInfo.siteInfo[0].citation;
+                    let description = MyGoodInfo.siteInfo[0].description;
+                    let variable = MyGoodInfo.siteInfo[0].variableName
+            }
+            $("#siteinfo").html(`<h1>${mysitename}</h1>
+                                <p>
+                                    <div>Site Code: ${sitecode}</div>
+                                </p>
+                                <p>
+                                    <div>Citation: ${citation}</div>
+                                </p>
+                                    <div>${description}</div>
+                                <p>
+                                    <div>${variable}
+                                </p>`);
+             $("#timeseries").html(`<h1></h1>`)
+
+//            })
+        }
+    })
+
+
+    }
+}
 
 $("#timeseries").click(function() {
     load_timeseries();
