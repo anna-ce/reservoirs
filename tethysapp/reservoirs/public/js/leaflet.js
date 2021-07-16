@@ -113,11 +113,15 @@ function getTimeSeries() {
     })
 }
 function getSiteInfo() {
-
+    let full_site_code = $("#variables").val();
+    let fsc = {
+      full_code: full_site_code
+    }
     $.ajax({
     type: "GET",
     url: "GetSiteInfo/",
     dataType: "JSON",
+    data: fsc,
 
     success: function(result) {
         var myInfo = result.siteInfo;
@@ -227,4 +231,3 @@ function load_timeseries() {
 $("#timeseries").click(function() {
     load_timeseries();
 })
-

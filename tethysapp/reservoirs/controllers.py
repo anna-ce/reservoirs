@@ -80,15 +80,15 @@ def getTimeSeries(request):
     sites = water.GetSites()
 
 def GetInfo(request):
-
+    print(request.GET)
+    fullsitecode = request.GET.get("full_code")
     return_object = {}
     mysiteinfo = []
     url = "http://128.187.106.131/app/index.php/dr/services/cuahsi_1_1.asmx?WSDL"
     water = pwml.WaterMLOperations(url=url)
-    sites = water.GetSites()
-
-    for site in sites:
-        mysiteinfo.append(water.GetSiteInfo(site['fullSiteCode']))
+    # sites = water.GetSites()
+    # for site in sites:
+    mysiteinfo.append(water.GetSiteInfo(fullsitecode))
 
     return_object['siteInfo'] = mysiteinfo
 
