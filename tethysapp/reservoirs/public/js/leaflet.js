@@ -99,61 +99,128 @@ var GetSitesNow = function(){
 }
 GetSitesNow();
 
-function load_timeseries() {
-    let myreservoir = $("#variables").val();
-    if (myreservoir === 'none') {
-//        alert("You have not selected a reservoir");
-    } else {
 
-        $("#obsgraph").modal('show');
-        $("#siteinfo").html('');
 
-        $.ajax({
+function getTimeSeries() {
+    $.ajax({
         type: "GET",
         url: "GetSiteInfo/",
         dataType: "JSON",
 
-        success: function(result) {
+       success: function(result) {
 
-            var myInfo =result.siteInfo;
-            const myOtherSites = [];
+       }
+    })
+}
+function getSiteInfo() {
 
-            for(var i=0; i< myInfo.length; ++i){
-                if (myInfo[i]['siteInfo'][0]['siteName'].includes("Presa") || myInfo[i]['siteInfo'][0]['siteName'].includes("presa")) {
-                    myOtherSites.push(myInfo[i]);
-                }
+    $.ajax({
+    type: "GET",
+    url: "GetSiteInfo/",
+    dataType: "JSON",
+
+    success: function(result) {
+        var myInfo = result.siteInfo;
+        const myOtherSites = [];
+
+        for(var i=0; i< myInfo.length; ++i){
+            if (myInfo[i]['siteInfo'][0]['siteName'].includes("Presa") || myInfo[i]['siteInfo'][0]['siteName'].includes("presa")) {
+                myOtherSites.push(myInfo[i]);
             }
-
-            for (var i=0; i<myOtherSites.length; ++i) {
-
-                if (myreservoir == i) { break; }
-
-                    let MyGoodInfo = myOtherSites[i];
-                    console.log(MyGoodInfo.siteInfo)
-                    let mysitename = MyGoodInfo.siteInfo[0].siteName;
-                    let sitecode = MyGoodInfo.siteInfo[0].siteCode;
-                    let citation = MyGoodInfo.siteInfo[0].citation;
-                    let description = MyGoodInfo.siteInfo[0].description;
-                    let variable = MyGoodInfo.siteInfo[0].variableName
-            }
-            $("#siteinfo").html(`<h1>${mysitename}</h1>
-                                <p>
-                                    <div>Site Code: ${sitecode}</div>
-                                </p>
-                                <p>
-                                    <div>Citation: ${citation}</div>
-                                </p>
-                                    <div>${description}</div>
-                                <p>
-                                    <div>${variable}
-                                </p>`);
-             $("#timeseries").html(`<h1></h1>`)
-
-//            })
         }
+        //console.log(myOtherSites);
+        let myreservoir = $("#variables").val();
+
+        for (var i=0; i<myOtherSites.length; ++i) {
+
+            if (myreservoir == i) { break; }
+
+                let MyGoodInfo = myOtherSites[i];
+
+                var mysitename = MyGoodInfo.siteInfo[0].siteName;
+                var sitecode = MyGoodInfo.siteInfo[0].siteCode;
+                var citation = MyGoodInfo.siteInfo[0].citation;
+                var description = MyGoodInfo.siteInfo[0].description;
+                var variable = MyGoodInfo.siteInfo[0].variableName
+        }
+        //console.log(MyGoodInfo)
+
+        $("#siteinfo").html(`<h1>${mysitename}</h1>
+                            <p>
+                                <div>Site Code: ${sitecode}</div>
+                            </p>
+                            <p>
+                                <div>Citation: ${citation}</div>
+                            </p>
+                                <div>${description}</div>
+                            <p>
+                                <div>${variable}
+                            </p>`);
+         $("#mytimeseries").html(`<h1>hi</h1>`);
+    }
     })
 
+}
 
+function load_timeseries() {
+
+    let myreservoir = $("#variables").val();
+
+    if (myreservoir === 'none') {
+
+        alert("You have not selected a reservoir");
+
+    } else {
+
+        $("#obsgraph").modal('show');
+        $("#siteinfo").html('');
+        $("#mytimeseries").html('');
+        getSiteInfo();
+
+//        $.ajax({
+//        type: "GET",
+//        url: "GetSiteInfo/",
+//        dataType: "JSON",
+//
+//        success: function(result) {
+//            var myInfo =result.siteInfo;
+//            const myOtherSites = [];
+//
+//            for(var i=0; i< myInfo.length; ++i){
+//                if (myInfo[i]['siteInfo'][0]['siteName'].includes("Presa") || myInfo[i]['siteInfo'][0]['siteName'].includes("presa")) {
+//                    myOtherSites.push(myInfo[i]);
+//                }
+//            }
+//            //console.log(myOtherSites);
+//
+//            for (var i=0; i<myOtherSites.length; ++i) {
+//
+//                if (myreservoir == i) { break; }
+//
+//                    let MyGoodInfo = myOtherSites[i];
+//
+//                    var mysitename = MyGoodInfo.siteInfo[0].siteName;
+//                    var sitecode = MyGoodInfo.siteInfo[0].siteCode;
+//                    var citation = MyGoodInfo.siteInfo[0].citation;
+//                    var description = MyGoodInfo.siteInfo[0].description;
+//                    var variable = MyGoodInfo.siteInfo[0].variableName
+//            }
+//            //console.log(MyGoodInfo)
+//
+//            $("#siteinfo").html(`<h1>${mysitename}</h1>
+//                                <p>
+//                                    <div>Site Code: ${sitecode}</div>
+//                                </p>
+//                                <p>
+//                                    <div>Citation: ${citation}</div>
+//                                </p>
+//                                    <div>${description}</div>
+//                                <p>
+//                                    <div>${variable}
+//                                </p>`);
+//             $("#mytimeseries").html(`<h1>hi</h1>`);
+//        }
+//        })
     }
 }
 

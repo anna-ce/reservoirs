@@ -18,6 +18,9 @@
 
 {% block app_navigation_items %}
   <li class="title">Choose a Reservoir Location</li>
+<!--  <select id="reservoir_list">-->
+<!--    <option value="">&#45;&#45;Please choose an option&#45;&#45;</option>-->
+<!--  </select>-->
     {% gizmo select_input variables %}
 
   <li class="title">Reservoir Water Elevation</li>
@@ -51,7 +54,7 @@
           <!-- Nav tabs -->
           <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active"><a id="siteinfo_tab_link" href="#siteinfo" aria-controls="siteinfo" role="tab" data-toggle="tab">Site Info</a></li>
-            <li role="presentation"><a id="timeseries_tab_link" href="#timeseries" aria-controls="timeseries" role="tab" data-toggle="tab">Time Series</a></li>
+            <li role="presentation"><a id="mytimeseries_tab_link" href="#mytimeseries" aria-controls="mytimeseries" role="tab" data-toggle="tab">Time Series</a></li>
             <li role="presentation"><a id="monthlyaverage_tab_link" href="#monthlyaverage" aria-controls="monthlyaverage" role="tab" data-toggle="tab">Monthly Average</a></li>
             <li role="presentation"><a id="volumechart_tab_link" href="#volumechart" aria-controls="volumechart" role="tab" data-toggle="tab">Volume Chart</a></li>
             <li role="presentation"><a id="forecast_tab_link" href="#forecastchart" aria-controls="volumechart" role="tab" data-toggle="tab">Forecast</a></li>
@@ -64,7 +67,7 @@
                 </div>
               </div>
             </div>
-            <div role="tabpanel" class="tab-pane" id="timeseries">
+            <div role="tabpanel" class="tab-pane" id="mytimeseries">
               <div class="panel panel-default">
                 <div class="panel-body">
                 </div>

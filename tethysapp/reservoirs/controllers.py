@@ -25,14 +25,14 @@ def home(request):
     sites = water.GetSites()
     df_sites = pd.DataFrame.from_dict(sites)
     site_name = df_sites['sitename']
-
+    site_fullcode = df_sites['fullSiteCode']
     sites_presa = [('None', 'none')]
-    x=1
-    for site in site_name:
-        if 'Presa' in site:
-            reservoir = (site, x)
+
+
+    for sn, sf in zip(site_name, site_fullcode):
+        if 'Presa' in sn:
+            reservoir = (sn, sf)
             sites_presa.append(reservoir)
-            x = x + 1
 
     variables = SelectInput(
         display_text='Select a Reservoir',
@@ -56,9 +56,28 @@ def GetSites(request):
     sites = water.GetSites()
     return_object['siteInfo'] = sites
 
-#    print(type(sites))
+    return JsonResponse(return_object)
+
+def getMonthlyAverage(request):
+
+    url = "http://128.187.106.131/app/index.php/dr/services/cuahsi_1_1.asmx?WSDL"
+    water = pwml.WaterMLOperations(url=url)
+    m_avg = water.GetMonthlyAverage(None, site_full_code, variable_full_code, start_date, end_date)
+
+    data = {'Months': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            'Monthly Average': m_avg,
+            }
+    return_object = pd.DataFrame(data, columns=['Months', 'Monthly Average'])
 
     return JsonResponse(return_object)
+
+
+def getTimeSeries(request):
+
+    return_object = {}
+    url = "http://128.187.106.131/app/index.php/dr/services/cuahsi_1_1.asmx?WSDL"
+    water = pwml.WaterMLOperations(url=url)
+    sites = water.GetSites()
 
 def GetInfo(request):
 
@@ -73,10 +92,18 @@ def GetInfo(request):
 
     return_object['siteInfo'] = mysiteinfo
 
-#    print(type(mysiteinfo))
-
     return JsonResponse(return_object)
 
+def GetValues(request):
+
+    return_object = {}
+    myvalues = []
+    url = "http://128.187.106.131/app/index.php/dr/services/cuahsi_1_1.asmx?WSDL"
+    water = pwml.WaterMLOperations(url=url)
+    values = water.GetValues(site_full_code, variable_full_code)
+    print(values)
+
+    return JsonRespons(return_object)
 
     # PLOT THE TIME SERIES
     # timeStamps = []

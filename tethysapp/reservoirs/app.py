@@ -39,6 +39,21 @@ class Reservoirs(TethysAppBase):
                 url='GetSiteInfo/',
                 controller='reservoirs.controllers.GetInfo'
             ),
+            UrlMap(
+                name='GetValues',
+                url='GetValues/',
+                controller='reservoirs.controllers.GetValues'
+            ),
+            UrlMap(
+                name='getTimeSeries',
+                url='getTimeSeries/',
+                controller='reservoirs.controllers.getTimeSeries'
+            ),
+            UrlMap(
+                name='getMonthlyAverage',
+                url='getMonthlyAverage/',
+                controller='reservoirs.controllers.getMonthlyAverage'
+            )
         )
 
         return url_maps
