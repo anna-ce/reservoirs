@@ -13,42 +13,6 @@ var Esri_Imagery_Labels = L.esri.basemapLayer('ImageryLabels');
 basemaps = {"Basemap": L.layerGroup([Esri_WorldImagery, Esri_Imagery_Labels]).addTo(map)}
 
 
-//var GetSiteInfo = function(){
-//    $.ajax({
-//        type: "GET",
-//        url: "GetSiteInfo/",
-//        dataType: "JSON",
-//
-//        success: function(result) {
-//
-//            var myInfo =result.siteInfo;
-//            const myOtherSites = [];
-//
-//            for(var i=0; i< myInfo.length; ++i){
-//                if (myInfo[i]['siteInfo'][0]['siteName'].includes("Presa") || myInfo[i]['siteInfo'][0]['siteName'].includes("presa")) {
-//                    myOtherSites.push(myInfo[i]);
-//                }
-//            }
-//            console.log('i was run');
-//
-//            $("#timeseries").click(function() {
-//                let curres = $("#variables").val();
-//                id = curres;
-//
-//                for (var i=0; i<myOtherSites.length; ++i) {
-//
-//                    if (id == i+1) {
-//                        let MyGoodInfo = myOtherSites[i];
-//                        console.log(MyGoodInfo)
-//                    return MyGoodInfo
-//                    }
-//                }
-//            })
-//        }
-//    })
-//}
-//GetSiteInfo();
-
 var GetSitesNow = function(){
     $.ajax({
         type: "GET",
@@ -101,22 +65,46 @@ GetSitesNow();
 
 
 
-function getTimeSeries() {
+function getValues() {
+
+    let site_full_code = $("#variables").val();
+    let fsc = {
+        full_code: site_full_code
+    }
+
     $.ajax({
         type: "GET",
-        url: "GetSiteInfo/",
+        url: "GetValues",
         dataType: "JSON",
+        data: fsc,
 
-       success: function(result) {
+        success: function(result) {
+            var values = result.myvalues;
+            specific_values = values[0]['values'];
+            sitename = values[0]['values'][0]['siteName']
+            const mydatavalues = [];
 
-       }
+            for(var i=0; i<specific_values.length; ++i){
+                mydatavalues.push(specific_values[i]['dataValue']);
+            }
+
+//is this time series cumulative? for all of the time ever? is there also the whisker plot included?
+
+        $("#mytimeseries").html(`<h2>${sitename}</h2>
+                            <p>
+                            <div>${mydatavalues}</div>`)
+
+        }
     })
 }
+
 function getSiteInfo() {
+
     let full_site_code = $("#variables").val();
     let fsc = {
       full_code: full_site_code
     }
+
     $.ajax({
     type: "GET",
     url: "GetSiteInfo/",
@@ -149,19 +137,21 @@ function getSiteInfo() {
         }
         //console.log(MyGoodInfo)
 
-        $("#siteinfo").html(`<h1>${mysitename}</h1>
-                            <p>
-                                <div>Site Code: ${sitecode}</div>
-                            </p>
-                            <p>
-                                <div>Citation: ${citation}</div>
-                            </p>
-                                <div>${description}</div>
-                            <p>
-                                <div>${variable}
-                            </p>`);
-         $("#mytimeseries").html(`<h1>hi</h1>`);
+        $("#siteinfo").html(
+            `<h1>${mysitename}</h1>
+                <p>
+            <div>Site Code: ${sitecode}</div>
+                </p>
+                <p>
+            <div>Citation: ${citation}</div>
+                </p>
+            <div>${description}</div>
+                <p>
+            <div>${variable}
+                </p>`);
+        $("#obsgraph").find('.modal-header').text(mysitename);
     }
+
     })
 
 }
@@ -175,56 +165,11 @@ function load_timeseries() {
         alert("You have not selected a reservoir");
 
     } else {
-
-        $("#obsgraph").modal('show');
         $("#siteinfo").html('');
         $("#mytimeseries").html('');
         getSiteInfo();
-
-//        $.ajax({
-//        type: "GET",
-//        url: "GetSiteInfo/",
-//        dataType: "JSON",
-//
-//        success: function(result) {
-//            var myInfo =result.siteInfo;
-//            const myOtherSites = [];
-//
-//            for(var i=0; i< myInfo.length; ++i){
-//                if (myInfo[i]['siteInfo'][0]['siteName'].includes("Presa") || myInfo[i]['siteInfo'][0]['siteName'].includes("presa")) {
-//                    myOtherSites.push(myInfo[i]);
-//                }
-//            }
-//            //console.log(myOtherSites);
-//
-//            for (var i=0; i<myOtherSites.length; ++i) {
-//
-//                if (myreservoir == i) { break; }
-//
-//                    let MyGoodInfo = myOtherSites[i];
-//
-//                    var mysitename = MyGoodInfo.siteInfo[0].siteName;
-//                    var sitecode = MyGoodInfo.siteInfo[0].siteCode;
-//                    var citation = MyGoodInfo.siteInfo[0].citation;
-//                    var description = MyGoodInfo.siteInfo[0].description;
-//                    var variable = MyGoodInfo.siteInfo[0].variableName
-//            }
-//            //console.log(MyGoodInfo)
-//
-//            $("#siteinfo").html(`<h1>${mysitename}</h1>
-//                                <p>
-//                                    <div>Site Code: ${sitecode}</div>
-//                                </p>
-//                                <p>
-//                                    <div>Citation: ${citation}</div>
-//                                </p>
-//                                    <div>${description}</div>
-//                                <p>
-//                                    <div>${variable}
-//                                </p>`);
-//             $("#mytimeseries").html(`<h1>hi</h1>`);
-//        }
-//        })
+        getValues();
+        $("#obsgraph").modal('show');
     }
 }
 
