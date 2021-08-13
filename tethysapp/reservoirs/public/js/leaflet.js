@@ -87,7 +87,6 @@ function getValues() {
         data: fsc,
 
         success: function(result) {
-
             var values = result.myvalues;
             specific_values = values[0]['values'];
             sitename = values[0]['values'][0]['siteName']
@@ -101,10 +100,8 @@ function getValues() {
 
             var values_trace = {
               type: "scatter",
-              //mode: "lines",
-              name: 'AAPL High',
-              x: [mydatavalues],
-              y: [mydateTime],
+              x: mydateTime,
+              y: mydatavalues,
               line: {color: '#17BECF'}
             }
 
@@ -138,13 +135,16 @@ function getValues() {
 
 //is this time series cumulative? for all of the time ever? is there also the whisker plot included?
 //what is time series for interpolations versus just the time series?
-//        $("#mytimeseries").html(`<h2>${sitename}</h2>`);
-//        $("#mytimeseries").removeClass('hidden');
-//        $("#mytimeseries").html(`<div>${myDiv}</div>`)
+       // $("#mytimeseries").html(`<h2>${sitename}</h2>`);
+       $("#mytimeseries").removeClass('hidden');
+       // $("#mytimeseries").html(`<div>${myDiv}</div>`)
         }
     })
 }
-
+// $('#obsgraph').on('shown.bs.modal', function (e) {
+//   console.log("holas");
+//   getValues()
+// })
 function getSiteInfo() {
 
     let full_site_code = $("#variables").val();
@@ -216,7 +216,7 @@ function load_timeseries() {
 
     } else {
         $("#siteinfo").html('');
-        $("#mytimeseries").html('');
+        // $("#mytimeseries").html('');
         getSiteInfo();
         getValues();
         $("#obsgraph").modal('show');
