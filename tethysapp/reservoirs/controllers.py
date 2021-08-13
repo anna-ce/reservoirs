@@ -10,6 +10,7 @@ import numpy as np
 from tethys_sdk.workspaces import app_workspace
 import numpy as np
 import json
+import plotly as pl
 import pandas as pd
 
 
@@ -70,8 +71,8 @@ def GetSites(request):
 #     return_object = pd.DataFrame(data, columns=['Months', 'Monthly Average'])
 #
 #     return JsonResponse(return_object)
-
-
+#
+#
 # def getTimeSeries(request):
 #
 #     return_object = {}
@@ -112,6 +113,24 @@ def GetValues(request):
 
     myvalues.append(water.GetValues(fullsitecode, variable_full_code, start_date, end_date))
 
+    timeStamps = []
+    valuesTimeSeries = []
+    # for index in myvalues:
+    #     timeStamps.append(index['dateTimeUTC'])
+    #     valuesTimeSeries.append(index['dataValue'])
+    #
+    # fig = go.Figure(data=go.Scatter(x=timeStamps, y=valuesTimeSeries))
+    # # Edit the layout
+    # fig.update_layout(title=myvalues[0]['variableName'],
+    #                   xaxis_title=myvalues[0]['timeUnitAbbreviation'],
+    #                   yaxis_title=myvalues[0]['unitAbbreviation'])
+    # fig.show()
+    #
+    # df = pd.DataFrame(dict(
+    #     data=valuesTimeSeries
+    # ))
+    # fig = px.box(df, y="data", points="all")
+    # fig.show()
 
     return_object['myvalues'] = myvalues
 

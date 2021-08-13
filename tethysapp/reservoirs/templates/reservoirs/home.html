@@ -35,6 +35,13 @@
 
 {# Use the after_app_content block for modals #}
 {% block after_app_content %}
+
+<head>
+  <script src='https://cdn.plot.ly/plotly-2.3.0.min.js'></script>
+</head>
+<!--<body>-->
+<!--  <div id="myDiv"></div>-->
+<!--</body>-->
   <!----Observed Data ----->
   <div class="modal fade" id="obsgraph" tabindex="-1" role="dialog" aria-labelledby="about-modal-label">
     <div class="modal-dialog" role="document">
@@ -70,6 +77,7 @@
             <div role="tabpanel" class="tab-pane" id="mytimeseries">
               <div class="panel panel-default">
                 <div class="panel-body">
+                  <div id="myDiv"></div>
                 </div>
               </div>
             </div>
