@@ -75,6 +75,9 @@ GetSitesNow();
 
 function getValues() {
 
+    $('#mytimeseries-loading').removeClass('hidden');
+
+
     let site_full_code = $("#variables").val();
     let fsc = {
         full_code: site_full_code
@@ -87,6 +90,11 @@ function getValues() {
         data: fsc,
 
         success: function(result) {
+        
+            Plotly.purge('myDiv')
+            $('#mytimeseries-loading').addClass('hidden');
+
+
             var values = result.myvalues;
             specific_values = values[0]['values'];
             sitename = values[0]['values'][0]['siteName']
@@ -130,21 +138,11 @@ function getValues() {
                     }
                 }
             };
-
             Plotly.newPlot('myDiv', data, layout);
-
-//is this time series cumulative? for all of the time ever? is there also the whisker plot included?
-//what is time series for interpolations versus just the time series?
-       // $("#mytimeseries").html(`<h2>${sitename}</h2>`);
-       $("#mytimeseries").removeClass('hidden');
-       // $("#mytimeseries").html(`<div>${myDiv}</div>`)
         }
     })
 }
-// $('#obsgraph').on('shown.bs.modal', function (e) {
-//   console.log("holas");
-//   getValues()
-// })
+
 function getSiteInfo() {
 
     let full_site_code = $("#variables").val();

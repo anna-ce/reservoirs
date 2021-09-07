@@ -1,5 +1,6 @@
 {% extends "reservoirs/base.html" %}
 {% load tethys_gizmos %}
+{% load staticfiles %}
 
 {% block header_buttons %}
   <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Help">
@@ -35,6 +36,7 @@
 
 {# Use the after_app_content block for modals #}
 {% block after_app_content %}
+
 
 <head>
   <script src='https://cdn.plot.ly/plotly-2.3.0.min.js'></script>
@@ -77,6 +79,7 @@
             <div role="tabpanel" class="tab-pane" id="mytimeseries">
               <div class="panel panel-default">
                 <div class="panel-body">
+                  <div class="flex-container-row"><img id="mytimeseries-loading" class="view-file hidden" src="{% static 'reservoirs/images/loader.gif' %}" /></div>
                   <div id="myDiv"></div>
                 </div>
               </div>
