@@ -77,6 +77,7 @@ function getValues() {
 
     $('#mytimeseries-loading').removeClass('hidden');
 
+    $('#myDiv').empty();
 
     let site_full_code = $("#variables").val();
     let fsc = {
@@ -90,8 +91,8 @@ function getValues() {
         data: fsc,
 
         success: function(result) {
-        
-            Plotly.purge('myDiv')
+
+            // Plotly.purge('myDiv')
             $('#mytimeseries-loading').addClass('hidden');
 
 
