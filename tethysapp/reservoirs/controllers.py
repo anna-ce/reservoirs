@@ -22,32 +22,49 @@ def home(request):
     """
 
     url = "http://128.187.106.131/app/index.php/dr/services/cuahsi_1_1.asmx?WSDL"
-    water = pwml.WaterMLOperations(url=url)
-    sites = water.GetSites()
-    df_sites = pd.DataFrame.from_dict(sites)
-    site_name = df_sites['sitename']
-    site_fullcode = df_sites['fullSiteCode']
-    sites_presa = [('None', 'none')]
+    try:
+        water = pwml.WaterMLOperations(url=url)
+        sites = water.GetSites()
+        df_sites = pd.DataFrame.from_dict(sites)
+        site_name = df_sites['sitename']
+        site_fullcode = df_sites['fullSiteCode']
+        sites_presa = [('None', 'none')]
 
 
-    for sn, sf in zip(site_name, site_fullcode):
-        if 'Presa' in sn:
-            reservoir = (sn, sf)
-            sites_presa.append(reservoir)
+        for sn, sf in zip(site_name, site_fullcode):
+            if 'Presa' in sn:
+                reservoir = (sn, sf)
+                sites_presa.append(reservoir)
 
-    variables = SelectInput(
-        display_text='Select a Reservoir',
-        name='variables',
-        multiple=False,
-        original=True,
-        options=tuple(sites_presa)
-    )
+        variables = SelectInput(
+            display_text='Select a Reservoir',
+            name='variables',
+            multiple=False,
+            original=True,
+            options=tuple(sites_presa)
+        )
 
-    context = {
-        'variables': variables,
-    }
+        context = {
+            'variables': variables,
+        }
+        return render(request, 'reservoirs/home.html', context)
 
-    return render(request, 'reservoirs/home.html', context)
+    except Exception as e:
+        print(e)
+        variables = SelectInput(
+            display_text='Select a Reservoir',
+            name='variables',
+            multiple=False,
+            original=True,
+            options=tuple([])
+        )
+
+        context = {
+            'variables': variables,
+        }
+        return render(request, 'reservoirs/home.html', context)
+
+
 
 def GetSites(request):
 
@@ -135,4 +152,3 @@ def GetValues(request):
     return_object['myvalues'] = myvalues
 
     return JsonResponse(return_object)
-
