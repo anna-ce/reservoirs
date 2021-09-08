@@ -222,25 +222,13 @@ function getForecast() {
         data: fsc,
 
         success: function(result) {
-
-            // Plotly.purge('myDiv')
-            $('#mytimeseries-loading').addClass('hidden');
-            console.log(result);
-            //
-            //
+          $("#forecast_chart").empty();
+          $('#mytimeseries-loading').addClass('hidden');
+          if(result.hasOwnProperty('error')){
             var values_avg = result.avg;
             var values_se = result.se5;
             var values_max = result.max;
             var mydateTime =  result.date;
-            // specific_values = values[0]['values'];
-            // sitename = values[0]['values'][0]['siteName']
-            // const mydatavalues = [];
-            // const mydateTime = [];
-            //
-            // for(var i=0; i<specific_values.length; ++i){
-            //     mydatavalues.push(specific_values[i]['dataValue']);
-            //     mydateTime.push(specific_values[i]['dateTime'])
-            // }
 
             var values_max_trace = {
               type: "scatter",
@@ -287,6 +275,10 @@ function getForecast() {
             //     }
             // };
             Plotly.newPlot('forecast_chart', data);
+          }
+          else{
+            $("#forecast_chart").html(result['error']);
+          }
         }
     })
 }
@@ -312,7 +304,11 @@ $("#timeseries").click(function() {
     load_timeseries();
 })
 $('#forecast_tab_link').click(function(){
-  $('#forecast').addClass('active')
+  // $('#forecast').addClass('active')
+  getForecast();
+})
 
-  getForecast()
+$('#mytimeseries_tab_link').click(function(){
+  // $('#forecast').addClass('active')
+  getValues();
 })
