@@ -224,7 +224,7 @@ function getForecast() {
         success: function(result) {
           $("#forecast_chart").empty();
           $('#mytimeseries-loading').addClass('hidden');
-          if(result.hasOwnProperty('error')){
+          if(!result.hasOwnProperty('error')){
             var values_avg = result.avg;
             var values_se = result.se5;
             var values_max = result.max;
