@@ -13,3 +13,7 @@ requirements:
   pip:
 
 post:
+
+#xlrd
+#geoglows
+#scipy
