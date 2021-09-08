@@ -12,8 +12,9 @@ import numpy as np
 import json
 import plotly as pl
 import pandas as pd
+from .app import Reservoirs as app
 
-
+BASE_URL = app.get_custom_setting('Hydroser_Endpoint')
 @login_required()
 def home(request):
 
@@ -21,9 +22,9 @@ def home(request):
     Controller for the app home page.
     """
 
-    url = "http://128.187.106.131/app/index.php/dr/services/cuahsi_1_1.asmx?WSDL"
+    # url = "http://128.187.106.131/app/index.php/dr/services/cuahsi_1_1.asmx?WSDL"
     try:
-        water = pwml.WaterMLOperations(url=url)
+        water = pwml.WaterMLOperations(url=BASE_URL)
         sites = water.GetSites()
         df_sites = pd.DataFrame.from_dict(sites)
         site_name = df_sites['sitename']
@@ -69,8 +70,8 @@ def home(request):
 def GetSites(request):
 
     return_object = {}
-    url = "http://128.187.106.131/app/index.php/dr/services/cuahsi_1_1.asmx?WSDL"
-    water = pwml.WaterMLOperations(url=url)
+    # url = "http://128.187.106.131/app/index.php/dr/services/cuahsi_1_1.asmx?WSDL"
+    water = pwml.WaterMLOperations(url=BASE_URL)
     sites = water.GetSites()
     return_object['siteInfo'] = sites
 
@@ -103,8 +104,8 @@ def GetInfo(request):
     return_object = {}
     mysiteinfo = []
     # myvalues = []
-    url = "http://128.187.106.131/app/index.php/dr/services/cuahsi_1_1.asmx?WSDL"
-    water = pwml.WaterMLOperations(url=url)
+    # url = "http://128.187.106.131/app/index.php/dr/services/cuahsi_1_1.asmx?WSDL"
+    water = pwml.WaterMLOperations(url=BASE_URL)
 
     mysiteinfo.append(water.GetSiteInfo(fullsitecode))
 
@@ -119,8 +120,8 @@ def GetValues(request):
     return_object = {}
     mysiteinfo = []
     myvalues = []
-    url = "http://128.187.106.131/app/index.php/dr/services/cuahsi_1_1.asmx?WSDL"
-    water = pwml.WaterMLOperations(url=url)
+    # url = "http://128.187.106.131/app/index.php/dr/services/cuahsi_1_1.asmx?WSDL"
+    water = pwml.WaterMLOperations(url=BASE_URL)
 
     mysiteinfo.append(water.GetSiteInfo(fullsitecode))
 

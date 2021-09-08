@@ -1,5 +1,5 @@
 from tethys_sdk.base import TethysAppBase, url_map_maker
-
+from tethys_sdk.app_settings import CustomSetting
 
 class Reservoirs(TethysAppBase):
     """
@@ -57,3 +57,17 @@ class Reservoirs(TethysAppBase):
         )
 
         return url_maps
+    def custom_settings(self):
+        """
+        Example custom_settings method.
+        """
+        custom_settings = (
+            CustomSetting(
+                name ='Hydroser_Endpoint',
+                type = CustomSetting.TYPE_STRING,
+                description = 'Endpoint for the WaterOneFlow web service',
+                required = True
+            ),
+        )
+
+        return custom_settings
