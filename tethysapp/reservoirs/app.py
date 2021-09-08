@@ -44,6 +44,11 @@ class Reservoirs(TethysAppBase):
                 url='GetValues/',
                 controller='reservoirs.controllers.GetValues'
             ),
+            UrlMap(
+                name='GetForecast',
+                url='GetForecast/',
+                controller='reservoirs.controllers.GetForecast'
+            ),
             # UrlMap(
             #     name='getTimeSeries',
             #     url='getTimeSeries/',

@@ -204,6 +204,92 @@ function getSiteInfo() {
     }})
 }
 
+function getForecast() {
+
+    $('#mytimeseries-loading').removeClass('hidden');
+
+    $('#myDiv').empty();
+
+    let site_full_name = $("#variables option:selected").text();
+    let fsc = {
+        site_name: site_full_name
+    }
+
+    $.ajax({
+        type: "GET",
+        url: "GetForecast",
+        dataType: "JSON",
+        data: fsc,
+
+        success: function(result) {
+
+            // Plotly.purge('myDiv')
+            $('#mytimeseries-loading').addClass('hidden');
+            console.log(result);
+            //
+            //
+            var values_avg = result.avg;
+            var values_se = result.se5;
+            var values_max = result.max;
+            var mydateTime =  result.date;
+            // specific_values = values[0]['values'];
+            // sitename = values[0]['values'][0]['siteName']
+            // const mydatavalues = [];
+            // const mydateTime = [];
+            //
+            // for(var i=0; i<specific_values.length; ++i){
+            //     mydatavalues.push(specific_values[i]['dataValue']);
+            //     mydateTime.push(specific_values[i]['dateTime'])
+            // }
+
+            var values_max_trace = {
+              type: "scatter",
+              x: mydateTime,
+              y: values_max,
+              // line: {color: '#17BECF'}
+            }
+            var values_avg_trace = {
+              type: "scatter",
+              x: mydateTime,
+              y: values_avg,
+              // line: {color: '#17BECF'}
+            }
+            var values_se5_trace = {
+              type: "scatter",
+              x: mydateTime,
+              y: values_se,
+              // line: {color: '#17BECF'}
+            }
+
+            var data = [values_max_trace,values_avg_trace,values_se5_trace];
+
+            // var layout = {
+            //     title: 'Water Surface Level',
+            //     xaxis: {
+            //         title: {
+            //             text: 'Years [yr]',
+            //             font: {
+            //             family: 'Courier New, monospace',
+            //             size: 18,
+            //             color: '#7f7f7f'
+            //             }
+            //         },
+            //     },
+            //     yaxis: {
+            //         title: {
+            //             text: 'StreamFlow [m]',
+            //             font: {
+            //             family: 'Courier New, monospace',
+            //             size: 18,
+            //             color: '#7f7f7f'
+            //             }
+            //         }
+            //     }
+            // };
+            Plotly.newPlot('forecast_chart', data);
+        }
+    })
+}
 
 function load_timeseries() {
 
@@ -217,11 +303,16 @@ function load_timeseries() {
         $("#siteinfo").html('');
         // $("#mytimeseries").html('');
         getSiteInfo();
-        getValues();
+        // getValues();
         $("#obsgraph").modal('show');
     }
 }
 
 $("#timeseries").click(function() {
     load_timeseries();
+})
+$('#forecast_tab_link').click(function(){
+  $('#forecast').addClass('active')
+
+  getForecast()
 })

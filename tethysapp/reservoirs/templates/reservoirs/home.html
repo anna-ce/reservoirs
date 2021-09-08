@@ -66,10 +66,10 @@
             <li role="presentation"><a id="mytimeseries_tab_link" href="#mytimeseries" aria-controls="mytimeseries" role="tab" data-toggle="tab">Time Series</a></li>
             <li role="presentation"><a id="monthlyaverage_tab_link" href="#monthlyaverage" aria-controls="monthlyaverage" role="tab" data-toggle="tab">Monthly Average</a></li>
             <li role="presentation"><a id="volumechart_tab_link" href="#volumechart" aria-controls="volumechart" role="tab" data-toggle="tab">Volume Chart</a></li>
-            <li role="presentation"><a id="forecast_tab_link" href="#forecastchart" aria-controls="volumechart" role="tab" data-toggle="tab">Forecast</a></li>
+            <li role="presentation"><a id="forecast_tab_link" href="#forecastchart" aria-controls="forecastchart" role="tab" data-toggle="tab">Forecast</a></li>
           </ul>
           <!-- Tab panes -->
-          <div class="tab-content">
+          <div class="tab-content" id = "tabs-id">
             <div role="tabpanel" class="tab-pane active" id="siteinfo">
               <div class="panel panel-default">
                 <div class="panel-body">
@@ -96,9 +96,13 @@
                 </div>
               </div>
             </div>
-            <div role="tabpanel" class="tab-pane" id="forecast">
+            <div role="tabpanel" class="tab-pane" id="forecastchart">
               <div class="panel panel-default">
                 <div class="panel-body">
+                  <div class="flex-container-row"><img id="mytimeseries-loading" class="view-file hidden" src="{% static 'reservoirs/images/loader.gif' %}" /></div>
+
+                  <div id="forecast_chart"></div>
+
                 </div>
               </div>
             </div>
