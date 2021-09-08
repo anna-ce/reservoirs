@@ -77,7 +77,6 @@ function getValues() {
 
     $('#mytimeseries-loading').removeClass('hidden');
 
-    $('#myDiv').empty();
 
     let site_full_code = $("#variables").val();
     let fsc = {
@@ -222,7 +221,6 @@ function getForecast() {
         data: fsc,
 
         success: function(result) {
-          $("#forecast_chart").empty();
           $('#mytimeseries-loading').addClass('hidden');
           if(!result.hasOwnProperty('error')){
             var values_avg = result.avg;
@@ -305,10 +303,17 @@ $("#timeseries").click(function() {
 })
 $('#forecast_tab_link').click(function(){
   // $('#forecast').addClass('active')
-  getForecast();
+  // console.log($('#leftmenu').is(':empty'))
+  // if($('#forecastchart').html() == ''){
+  //   $("#forecast_chart").empty();
+    getForecast();
+  // }
 })
 
 $('#mytimeseries_tab_link').click(function(){
   // $('#forecast').addClass('active')
-  getValues();
+  // if($('#myDiv').html() == ''){
+  //   $('#myDiv').empty();
+    getValues();
+  // }
 })
