@@ -221,58 +221,80 @@ function getForecast() {
         data: fsc,
 
         success: function(result) {
+          console.log(result);
           $('#mytimeseries-loading').addClass('hidden');
           if(!result.hasOwnProperty('error')){
             var values_avg = result.avg;
             var values_se = result.se5;
             var values_max = result.max;
             var mydateTime =  result.date;
+            var min_vals = [values_avg[0],values_se[0]];
+            var chart_min =  Math.min.apply(null,min_vals);
 
-            var values_max_trace = {
+            console.log([values_max[0],values_avg[0],values_se[0]]);
+            console.log(chart_min);
+            var data_chart_limits = Array(mydateTime.length).fill(chart_min-20);
+            console.log(data_chart_limits);
+            var values_limits_trace= {
               type: "scatter",
               x: mydateTime,
+              y: data_chart_limits,
+              mode: 'lines',
+              // line: {color: 'rgba(255,0,0,0.2)'},
+              name: '',
+
+            }
+            var values_max_trace = {
+              type: "scatter",
+              name: 'Max StreamFlow Forecast',
+              x: mydateTime,
               y: values_max,
-              // line: {color: '#17BECF'}
+              fill: 'tonexty',
+              mode: 'lines',
             }
             var values_avg_trace = {
               type: "scatter",
+              name: 'Average StreamFlow Forecast',
+              mode: 'lines',
               x: mydateTime,
               y: values_avg,
               // line: {color: '#17BECF'}
             }
             var values_se5_trace = {
               type: "scatter",
+              name: '75% StreamFlow Forecast',
               x: mydateTime,
               y: values_se,
+              line: {
+                dash: 'dashdot',
+                width: 4
+              }
               // line: {color: '#17BECF'}
             }
+            var data = []
+            if(chart_min > 0){
+              var data = [values_se5_trace,values_max_trace,values_avg_trace];
+            }
+            else{
+              var data = [values_avg_trace,values_max_trace,values_se5_trace];
 
-            var data = [values_max_trace,values_avg_trace,values_se5_trace];
+            }
+            // var data = [values_limits_trace,values_max_trace,values_avg_trace,values_se5_trace];
 
-            // var layout = {
-            //     title: 'Water Surface Level',
-            //     xaxis: {
-            //         title: {
-            //             text: 'Years [yr]',
-            //             font: {
-            //             family: 'Courier New, monospace',
-            //             size: 18,
-            //             color: '#7f7f7f'
-            //             }
-            //         },
-            //     },
-            //     yaxis: {
-            //         title: {
-            //             text: 'StreamFlow [m]',
-            //             font: {
-            //             family: 'Courier New, monospace',
-            //             size: 18,
-            //             color: '#7f7f7f'
-            //             }
-            //         }
-            //     }
-            // };
-            Plotly.newPlot('forecast_chart', data);
+            var layout = {
+                title: 'Forecasted Water Surface Level',
+                yaxis: {
+                    title: {
+                        text: 'Water Surface Level [m]',
+                        font: {
+                        family: 'Courier New, monospace',
+                        size: 18,
+                        color: '#7f7f7f'
+                        }
+                    }
+                }
+            };
+            Plotly.newPlot('forecast_chart', data, layout);
           }
           else{
             $("#forecast_chart").html(result['error']);
