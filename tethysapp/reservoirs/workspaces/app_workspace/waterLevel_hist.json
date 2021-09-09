@@ -1,0 +1,42 @@
+{
+  "Presa Moncion":
+    {
+      "dateTime": "2020-05-26 00:00:00",
+      "dataValue": 264.86
+    },
+  "Presa de Rincon":
+    {
+      "dateTime": "2020-05-26 00:00:00",
+      "dataValue": 119.32
+    },
+  "Presa de Hatillo":
+    {
+      "dateTime": "2020-05-26 00:00:00",
+      "dataValue": 85.25
+    },
+  "Presa de Jiguey":
+    {
+      "dateTime": "2020-05-26 00:00:00",
+      "dataValue": 527.44
+    },
+  "Presa Valdesia":
+    {
+      "dateTime": "2020-05-26 00:00:00",
+      "dataValue": 140.39
+    },
+  "Presa de Saban Yegua":
+    {
+      "dateTime": "2020-05-26 00:00:00",
+      "dataValue": 363.69
+    },
+  "Presa de Sabaneta":
+    {
+      "dateTime": "2020-05-26 00:00:00",
+      "dataValue": 626.98
+    },
+  "Presa de Tavera y Bao":
+  {
+    "dateTime": "2020-05-26 00:00:00",
+    "dataValue": 119.32
+  }
+}
