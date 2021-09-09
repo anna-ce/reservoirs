@@ -136,9 +136,8 @@ def GetValues(request):
     start_date = mysiteinfo[0]['siteInfo'][0]['beginDateTime']
     end_date = mysiteinfo[0]['siteInfo'][0]['endDateTime']
     variable_full_code = 'RES-EL'
-
-    myvalues.append(water.GetValues(fullsitecode, variable_full_code, start_date, end_date))
-
+    values_x = water.GetValues(fullsitecode, variable_full_code, start_date, end_date)
+    myvalues.append(values_x)
     timeStamps = []
     valuesTimeSeries = []
     # for index in myvalues:
@@ -172,10 +171,14 @@ def GetForecast(request):
     site_name_only = site_name.split(' ')[-1]
     print(site_name_only)
     streams_json_file_path = os.path.join(app.get_app_workspace().path, 'streams.json')
+    wlh_json_file_path = os.path.join(app.get_app_workspace().path, 'waterLevel_hist.json')
 
     with open(streams_json_file_path) as f:
         stream_data_reservoir = json.load(f)
-    print(stream_data_reservoir)
+
+    with open(wlh_json_file_path) as f:
+        wlh_data_reservoir = json.load(f)
+
     df_rc = pd.DataFrame({'volume_rc': [rating_curves[f'{site_name_only}_Vol_MCM']],'elevation_rc': [rating_curves[f'{site_name_only}_Elev_m']]})
     volume_datetime = [0]*15
     daily_vtotal_max = [0]*15
@@ -248,11 +251,40 @@ def GetForecast(request):
                 volume_datetime[i] = date.today() + timedelta(days = i)
                 i = i + 1
 
-        return_object['max'] = daily_vtotal_max
-        return_object['se5'] = daily_vtotal_75
-        return_object['avg'] = daily_vtotal_avg
-        return_object['date'] = volume_datetime
+        # return_object['max'] = daily_vtotal_max
+        # return_object['se5'] = daily_vtotal_75
+        # return_object['avg'] = daily_vtotal_avg
+        # return_object['date'] = volume_datetime
 
+        #volume to elevation
+        presa_rc_vol = df_rc['volume_rc'][0]
+        presa_rc_elev = df_rc['elevation_rc'][0]
+        print(presa_rc_vol)
+        # print(presa_rc_elev)
+        elevations_max =[]
+        elevations_75 =[]
+        elevations_avg =[]
+        # print(daily_vtotal_max)
+        for volume_max, volume_75, volume_avg in zip(daily_vtotal_max,daily_vtotal_75,daily_vtotal_avg):
+
+            lookup_max = min(range(len(presa_rc_vol)), key=lambda i: abs(presa_rc_vol[i]-(volume_max/1000000)))
+            lookup_75 = min(range(len(presa_rc_vol)), key=lambda i: abs(presa_rc_vol[i]-(volume_75/1000000)))
+            lookup_avg = min(range(len(presa_rc_vol)), key=lambda i: abs(presa_rc_vol[i]-(volume_avg/1000000)))
+            # print(abs(presa_rc_vol[0]-(volume_max/1000000)),lookup_max)
+
+            matching_elev_max = presa_rc_elev[lookup_max] + wlh_data_reservoir[site_name]['dataValue']
+            matching_elev_75 = presa_rc_elev[lookup_75] + wlh_data_reservoir[site_name]['dataValue']
+            matching_elev_avg = presa_rc_elev[lookup_avg] + wlh_data_reservoir[site_name]['dataValue']
+            # print(matching_elev_max,matching_elev_75,matching_elev_avg)
+            elevations_max.append(matching_elev_max)
+            elevations_75.append(matching_elev_75)
+            elevations_avg.append(matching_elev_avg)
+
+        # print(elevations_max)
+        return_object['max'] = elevations_max
+        return_object['se5'] = elevations_75
+        return_object['avg'] = elevations_avg
+        return_object['date'] = volume_datetime
     except KeyError as e:
         return_object['error'] = f'The reservoir {site_name} does not have forecast data available.'
         print(e)
