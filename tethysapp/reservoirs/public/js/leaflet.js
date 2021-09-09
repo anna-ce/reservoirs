@@ -229,29 +229,33 @@ function getForecast() {
             var values_se = result.se5;
             var values_max = result.max;
             var mydateTime =  result.date;
+            // var init_elv = result.init_elv;
 
             var values_avg2 = result.avg2;
             var values_se2 = result.se52;
             var values_max2 = result.max2;
             var mydateTime2 =  result.date2;
+            // var init_vol = result.init_vol;
+            //
+            //
+            // var min_vals = [values_avg[0],values_se[0]];
+            // var chart_min =  Math.min.apply(null,min_vals);
+            //
+            // console.log([values_max[0],values_avg[0],values_se[0]]);
+            // console.log(chart_min);
+            // var data_chart_limits = Array(mydateTime.length).fill(chart_min-20);
+            // var init_chart_limits = Array(mydateTime.length).fill(init_elv);
+            // console.log(data_chart_limits);
 
-            var min_vals = [values_avg[0],values_se[0]];
-            var chart_min =  Math.min.apply(null,min_vals);
-
-            console.log([values_max[0],values_avg[0],values_se[0]]);
-            console.log(chart_min);
-            var data_chart_limits = Array(mydateTime.length).fill(chart_min-20);
-            console.log(data_chart_limits);
-
-            var values_limits_trace= {
-              type: "scatter",
-              x: mydateTime,
-              y: data_chart_limits,
-              mode: 'lines',
-              // line: {color: 'rgba(255,0,0,0.2)'},
-              name: '',
-
-            }
+            // var values_limits_trace= {
+            //   type: "scatter",
+            //   x: mydateTime,
+            //   y: init_chart_limits,
+            //   mode: 'lines',
+            //   // line: {color: 'rgba(255,0,0,0.2)'},
+            //   name: '',
+            //
+            // }
             var values_max_trace = {
               type: "scatter",
               name: 'Max StreamFlow Forecast',
@@ -259,6 +263,7 @@ function getForecast() {
               y: values_max,
               fill: 'tonexty',
               mode: 'lines',
+              visible:'legendonly'
             }
             var values_avg_trace = {
               type: "scatter",
@@ -278,7 +283,14 @@ function getForecast() {
                 width: 4
               }
             }
-
+            // var init_limits_trace= {
+            //   type: "scatter",
+            //   x: mydateTime,
+            //   y: init_chart_limits,
+            //   mode: 'lines',
+            //   // line: {color: 'rgba(255,0,0,0.2)'},
+            //   name: 'Initial Volume',
+            // }
             var values_max_trace2 = {
               type: "scatter",
               name: 'Max StreamFlow Forecast',
@@ -294,6 +306,8 @@ function getForecast() {
               mode: 'lines',
               x: mydateTime,
               y: values_avg2,
+              fill: 'tozeroy',
+
               // line: {color: '#17BECF'}
             }
             var values_se5_trace2 = {
@@ -301,22 +315,25 @@ function getForecast() {
               name: '75% StreamFlow Forecast',
               x: mydateTime,
               y: values_se2,
+              fill: 'tozeroy',
               line: {
                 dash: 'dashdot',
                 width: 4
               }
             }
-            var data = []
-            var data2 = []
-            if(chart_min > 0){
-              var data = [values_se5_trace,values_max_trace,values_avg_trace];
-              var data2 = [values_se5_trace2,values_max_trace2,values_avg_trace2];
-            }
-            else{
-              var data = [values_avg_trace,values_max_trace,values_se5_trace];
-              var data2 = [values_avg_trace2,values_max_trace2,values_se5_trace2];
-            }
+            // var data = []
+            // if(chart_min > 0){
+            //   var data = [values_se5_trace,values_max_trace,values_avg_trace];
+            //   // var data = [values_limits_trace,values_max_trace,values_avg_trace,values_se5_trace];
+            // }
+            // else{
+            //   var data = [values_avg_trace,values_max_trace,values_se5_trace];
+            //   // var data = [values_limits_trace,values_max_trace,values_avg_trace,values_se5_trace];
+            // }
             // var data = [values_limits_trace,values_max_trace,values_avg_trace,values_se5_trace];
+            var data = [values_avg_trace,values_max_trace,values_se5_trace];
+
+            var data2 = [values_avg_trace2,values_se5_trace2,values_max_trace2];
 
             var layout = {
                 title: 'Forecasted Water Surface Level',

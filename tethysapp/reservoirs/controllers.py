@@ -254,7 +254,6 @@ def GetForecast(request):
         return_object['max2'] = daily_vtotal_max
         return_object['se52'] = daily_vtotal_75
         return_object['avg2'] = daily_vtotal_avg
-
         #volume to elevation
         presa_rc_vol = df_rc['volume_rc'][0]
         presa_rc_elev = df_rc['elevation_rc'][0]
