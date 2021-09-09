@@ -205,9 +205,8 @@ function getSiteInfo() {
 
 function getForecast() {
 
-    $('#mytimeseries-loading').removeClass('hidden');
-
-    $('#myDiv').empty();
+    $('#fe-loading').removeClass('hidden');
+    $('#fv-loading').removeClass('hidden');
 
     let site_full_name = $("#variables option:selected").text();
     let fsc = {
@@ -222,12 +221,20 @@ function getForecast() {
 
         success: function(result) {
           console.log(result);
-          $('#mytimeseries-loading').addClass('hidden');
+          $('#fe-loading').addClass('hidden');
+          $('#fv-loading').addClass('hidden');
+
           if(!result.hasOwnProperty('error')){
             var values_avg = result.avg;
             var values_se = result.se5;
             var values_max = result.max;
             var mydateTime =  result.date;
+
+            var values_avg2 = result.avg2;
+            var values_se2 = result.se52;
+            var values_max2 = result.max2;
+            var mydateTime2 =  result.date2;
+
             var min_vals = [values_avg[0],values_se[0]];
             var chart_min =  Math.min.apply(null,min_vals);
 
@@ -235,6 +242,7 @@ function getForecast() {
             console.log(chart_min);
             var data_chart_limits = Array(mydateTime.length).fill(chart_min-20);
             console.log(data_chart_limits);
+
             var values_limits_trace= {
               type: "scatter",
               x: mydateTime,
@@ -269,15 +277,44 @@ function getForecast() {
                 dash: 'dashdot',
                 width: 4
               }
+            }
+
+            var values_max_trace2 = {
+              type: "scatter",
+              name: 'Max StreamFlow Forecast',
+              x: mydateTime,
+              y: values_max2,
+              fill: 'tonexty',
+              mode: 'lines',
+              visible: 'legendonly'
+            }
+            var values_avg_trace2 = {
+              type: "scatter",
+              name: 'Average StreamFlow Forecast',
+              mode: 'lines',
+              x: mydateTime,
+              y: values_avg2,
               // line: {color: '#17BECF'}
             }
+            var values_se5_trace2 = {
+              type: "scatter",
+              name: '75% StreamFlow Forecast',
+              x: mydateTime,
+              y: values_se2,
+              line: {
+                dash: 'dashdot',
+                width: 4
+              }
+            }
             var data = []
+            var data2 = []
             if(chart_min > 0){
               var data = [values_se5_trace,values_max_trace,values_avg_trace];
+              var data2 = [values_se5_trace2,values_max_trace2,values_avg_trace2];
             }
             else{
               var data = [values_avg_trace,values_max_trace,values_se5_trace];
-
+              var data2 = [values_avg_trace2,values_max_trace2,values_se5_trace2];
             }
             // var data = [values_limits_trace,values_max_trace,values_avg_trace,values_se5_trace];
 
@@ -294,7 +331,21 @@ function getForecast() {
                     }
                 }
             };
+            var layout2 = {
+                title: 'Forecasted Volume',
+                yaxis: {
+                    title: {
+                        text: 'Volume [MCM]',
+                        font: {
+                        family: 'Courier New, monospace',
+                        size: 18,
+                        color: '#7f7f7f'
+                        }
+                    }
+                }
+            };
             Plotly.newPlot('forecast_chart', data, layout);
+            Plotly.newPlot('volume_chart', data2, layout2);
           }
           else{
             $("#forecast_chart").html(result['error']);
@@ -315,7 +366,9 @@ function load_timeseries() {
         $("#siteinfo").html('');
         // $("#mytimeseries").html('');
         getSiteInfo();
-        // getValues();
+        getValues();
+        getForecast();
+
         $("#obsgraph").modal('show');
     }
 }
@@ -323,19 +376,10 @@ function load_timeseries() {
 $("#timeseries").click(function() {
     load_timeseries();
 })
-$('#forecast_tab_link').click(function(){
-  // $('#forecast').addClass('active')
-  // console.log($('#leftmenu').is(':empty'))
-  // if($('#forecastchart').html() == ''){
-  //   $("#forecast_chart").empty();
-    getForecast();
-  // }
-})
-
-$('#mytimeseries_tab_link').click(function(){
-  // $('#forecast').addClass('active')
-  // if($('#myDiv').html() == ''){
-  //   $('#myDiv').empty();
-    getValues();
-  // }
-})
+// $('#forecast_tab_link').click(function(){
+//     getForecast();
+// })
+//
+// $('#mytimeseries_tab_link').click(function(){
+//     getValues();
+// })

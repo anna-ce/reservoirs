@@ -251,10 +251,9 @@ def GetForecast(request):
                 volume_datetime[i] = date.today() + timedelta(days = i)
                 i = i + 1
 
-        # return_object['max'] = daily_vtotal_max
-        # return_object['se5'] = daily_vtotal_75
-        # return_object['avg'] = daily_vtotal_avg
-        # return_object['date'] = volume_datetime
+        return_object['max2'] = daily_vtotal_max
+        return_object['se52'] = daily_vtotal_75
+        return_object['avg2'] = daily_vtotal_avg
 
         #volume to elevation
         presa_rc_vol = df_rc['volume_rc'][0]
