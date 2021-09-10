@@ -71,7 +71,7 @@ class Reservoirs(TethysAppBase):
                 name ='Hydroser_Endpoint',
                 type = CustomSetting.TYPE_STRING,
                 description = 'Endpoint for the WaterOneFlow web service',
-                required = True
+                required = False
             ),
         )
 

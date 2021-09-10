@@ -18,16 +18,10 @@
 {% endblock %}
 
 {% block app_navigation_items %}
-  <li class="title">Choose a Reservoir Location</li>
-<!--  <select id="reservoir_list">-->
-<!--    <option value="">&#45;&#45;Please choose an option&#45;&#45;</option>-->
-<!--  </select>-->
-    {% gizmo select_input variables %}
-
-  <li class="title">Reservoir Water Elevation</li>
-  <div>
-<button type ="button" class="button button1" name="button" id="timeseries"><strong>Load Time Series</strong></button>
-  </div>
+  <br>
+  {% gizmo select_input variables %}
+  <br>
+  <button type ="button" class="btn btn-success " name="button" id="timeseries"><strong>Load Time Series</strong></button>
 {% endblock %}
 
 {% block app_content %}

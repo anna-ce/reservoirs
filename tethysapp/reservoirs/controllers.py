@@ -37,7 +37,7 @@ def home(request):
         df_sites = pd.DataFrame.from_dict(sites)
         site_name = df_sites['sitename']
         site_fullcode = df_sites['fullSiteCode']
-        sites_presa = [('None', 'none')]
+        sites_presa = [('Select a Reservoir ...', 'none')]
 
 
         for sn, sf in zip(site_name, site_fullcode):
@@ -46,7 +46,7 @@ def home(request):
                 sites_presa.append(reservoir)
 
         variables = SelectInput(
-            display_text='Select a Reservoir',
+            display_text='List of Reservoirs',
             name='variables',
             multiple=False,
             original=True,
