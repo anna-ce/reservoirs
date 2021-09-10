@@ -160,11 +160,17 @@ function getSiteInfo() {
     data: fsc,
 
     success: function(result) {
+        console.log(result)
         var storage_capacity = result.values_sc;
         var elvs = storage_capacity.map(function (i) { return i[1]})
         var vols = storage_capacity.map(function (i) { return i[0]})
-        console.log(elvs)
-        console.log(vols)
+        var historical_data = result.values_hist;
+
+        var date_hist = historical_data.map(function (i) { return i[0]})
+        var elv_hist = historical_data.map(function (i) { return i[1]})
+        var min_vals_hist = Array(date_hist.length).fill(result.minimum);
+        var max_vals_hist = Array(date_hist.length).fill(result.maximum);
+
         var myInfo = result.siteInfo;
         const myOtherSites = [];
 
@@ -213,9 +219,8 @@ function getSiteInfo() {
           name: 'Niveles Reportados',
           x: elvs,
           y: vols,
-          fill: 'tonexty',
+          fill: 'tozeroy',
           mode: 'lines',
-          visible:'legendonly'
         }
         var data = [sc_max_trace];
 
@@ -243,9 +248,59 @@ function getSiteInfo() {
             }
         };
 
-        Plotly.newPlot('site_info_chart', data, layout);
+        Plotly.newPlot('site_sc_chart', data, layout);
+
+        var hist_trace = {
+          type: "scatter",
+          name: 'Water Level Reported',
+          x: date_hist,
+          y: elv_hist,
+          fill: 'tozeroy',
+          mode: 'lines',
+        }
+        var max_trace = {
+          type: "scatter",
+          name: 'Water Level Reported',
+          x: date_hist,
+          y: max_vals_hist,
+          mode: 'lines',
+        }
+        var min_trace = {
+          type: "scatter",
+          name: 'Water Level Reported',
+          x: date_hist,
+          y: min_vals_hist,
+          mode: 'lines',
+        }
+        var data_hist = [hist_trace,max_trace,min_trace ];
+
+        var layout = {
+            title: 'Historical Data',
+            xaxis: {
+                title: {
+                    text: 'Time',
+                    font: {
+                    family: 'Courier New, monospace',
+                    size: 18,
+                    color: '#7f7f7f'
+                    }
+                }
+            },
+            yaxis: {
+                title: {
+                    text: 'Water Surface Level [m]',
+                    font: {
+                    family: 'Courier New, monospace',
+                    size: 18,
+                    color: '#7f7f7f'
+                    }
+                }
+            }
+        };
 
 
+
+        Plotly.newPlot('site_hist_chart', data_hist, layout);
     }})
 }
 

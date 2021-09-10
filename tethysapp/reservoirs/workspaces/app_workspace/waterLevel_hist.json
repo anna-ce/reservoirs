@@ -2,41 +2,65 @@
   "Presa Moncion":
     {
       "dateTime": "2020-05-26 00:00:00",
-      "dataValue": 264.86
+      "dataValue": 264.86,
+      "minlvl": 223.00,
+      "maxlvl": 280.00,
+      "ymin": 180
     },
   "Presa de Rincon":
     {
       "dateTime": "2020-05-26 00:00:00",
-      "dataValue": 119.32
+      "dataValue": 119.32,
+      "minlvl": 108.50,
+      "maxlvl": 122,
+      "ymin": 95
     },
   "Presa de Hatillo":
     {
       "dateTime": "2020-05-26 00:00:00",
-      "dataValue": 85.25
+      "dataValue": 85.25,
+      "minlvl": 70.00,
+      "maxlvl": 86.50,
+      "ymin": 55
     },
   "Presa de Jiguey":
     {
       "dateTime": "2020-05-26 00:00:00",
-      "dataValue": 527.44
+      "dataValue": 527.44,
+      "minlvl": 500.00,
+      "maxlvl": 541.50,
+      "ymin": 450
     },
   "Presa Valdesia":
     {
       "dateTime": "2020-05-26 00:00:00",
-      "dataValue": 140.39
+      "dataValue": 140.39,
+      "minlvl": 130.75,
+      "maxlvl": 150.00,
+      "ymin": 110
     },
   "Presa de Saban Yegua":
     {
       "dateTime": "2020-05-26 00:00:00",
-      "dataValue": 363.69
+      "dataValue": 363.69,
+      "minlvl": 358,
+      "maxlvl": 396.4,
+      "ymin": 350
     },
   "Presa de Sabaneta":
     {
       "dateTime": "2020-05-26 00:00:00",
-      "dataValue": 626.98
+      "dataValue": 626.98,
+      "minlvl": 612,
+      "maxlvl": 644,
+      "ymin": 580
     },
   "Presa de Tavera y Bao":
   {
     "dateTime": "2020-05-26 00:00:00",
-    "dataValue": 119.32
+    "dataValue": 119.32,
+    "minlvl": 300.00,
+    "maxlvl": 327.50,
+    "ymin": 270
   }
 }
