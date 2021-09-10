@@ -19,7 +19,7 @@ import datetime
 from datetime import date
 from datetime import timedelta
 from scipy import integrate
-
+from .auxiliary import *
 from .app import Reservoirs as app
 
 BASE_URL = app.get_custom_setting('Hydroser_Endpoint')
@@ -109,6 +109,12 @@ def GetSites(request):
 def GetInfo(request):
 
     fullsitecode = request.GET.get("full_code")
+    site_name = request.GET.get("site_name")
+    print(site_name)
+    site_name_only = site_name.split(' ')[-1]
+
+    values_sc = make_storagecapcitycurve(site_name_only)
+
     return_object = {}
     mysiteinfo = []
     # myvalues = []
@@ -118,7 +124,7 @@ def GetInfo(request):
     mysiteinfo.append(water.GetSiteInfo(fullsitecode))
 
     return_object['siteInfo'] = mysiteinfo
-
+    return_object['values_sc'] = values_sc
 
     return JsonResponse(return_object)
 
@@ -164,7 +170,7 @@ def GetValues(request):
 def GetForecast(request):
     return_object = {}
     rating_curves_file_path = os.path.join(app.get_app_workspace().path, 'rating_curves_DR.xlsx')
-    rating_curves = pd.read_excel(rating_curves_file_path)
+    rating_curves = pd.read_excel(rating_curves_file_path).dropna()
 
     site_name = request.GET.get("site_name")
     print(site_name)

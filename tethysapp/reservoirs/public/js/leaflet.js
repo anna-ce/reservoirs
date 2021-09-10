@@ -33,7 +33,7 @@ var GetSitesNow = function(){
 
             for(var i=0; i< myGoodSites.length; ++i){
                 var markerLocation = new L.LatLng(myGoodSites[i]['latitude'], myGoodSites[i]['longitude']);
-                var marker = new L.Marker(markerLocation);
+                var marker = new L.Marker(markerLocation)
                 marker.bindPopup(myGoodSites[i]['sitename']);
                 map.addLayer(marker)
             }
@@ -146,8 +146,11 @@ function getValues() {
 function getSiteInfo() {
 
     let full_site_code = $("#variables").val();
+    let site_full_name = $("#variables option:selected").text();
+
     let fsc = {
-      full_code: full_site_code
+      full_code: full_site_code,
+      site_name: site_full_name
     }
 
     $.ajax({
@@ -157,6 +160,11 @@ function getSiteInfo() {
     data: fsc,
 
     success: function(result) {
+        var storage_capacity = result.values_sc;
+        var elvs = storage_capacity.map(function (i) { return i[1]})
+        var vols = storage_capacity.map(function (i) { return i[0]})
+        console.log(elvs)
+        console.log(vols)
         var myInfo = result.siteInfo;
         const myOtherSites = [];
 
@@ -167,7 +175,6 @@ function getSiteInfo() {
         }
 
         let myreservoir = $("#variables").val();
-
 
         for (var i=0; i<myOtherSites.length; ++i) {
 
@@ -185,7 +192,7 @@ function getSiteInfo() {
 
         }
 
-        $("#siteinfo").html(
+        $("#site_info_ta").html(
             `<h1>${mysitename}</h1>
                 <p>
             <div>Site Code: ${sitecode}</div>
@@ -200,6 +207,45 @@ function getSiteInfo() {
             <div>Latitude: ${latitude} &nbsp;&nbsp;&nbsp;&nbsp; Longitude: ${longitude}</div>
                 </p>`);
         $("#obsgraph").find('.modal-header').text(mysitename);
+
+        var sc_max_trace = {
+          type: "scatter",
+          name: 'Niveles Reportados',
+          x: elvs,
+          y: vols,
+          fill: 'tonexty',
+          mode: 'lines',
+          visible:'legendonly'
+        }
+        var data = [sc_max_trace];
+
+        var layout = {
+            title: 'Storage Capacity Curve',
+            xaxis: {
+                title: {
+                    text: 'Water Surface Level [m]',
+                    font: {
+                    family: 'Courier New, monospace',
+                    size: 18,
+                    color: '#7f7f7f'
+                    }
+                }
+            },
+            yaxis: {
+                title: {
+                    text: 'Volume[CMC]',
+                    font: {
+                    family: 'Courier New, monospace',
+                    size: 18,
+                    color: '#7f7f7f'
+                    }
+                }
+            }
+        };
+
+        Plotly.newPlot('site_info_chart', data, layout);
+
+
     }})
 }
 
@@ -380,7 +426,7 @@ function load_timeseries() {
         alert("You have not selected a reservoir");
 
     } else {
-        $("#siteinfo").html('');
+        // $("#siteinfo").html('');
         // $("#mytimeseries").html('');
         getSiteInfo();
         getValues();
