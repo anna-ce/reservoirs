@@ -130,8 +130,10 @@ def GetInfo(request):
     max = data_site['maxlvl'] - data_site['ymin']
     firstday = historical[0][0]
     lastday = historical[len(historical)-1][0]
-    return_object['minimum'] = [[firstday, min], [lastday, min]]
-    return_object['maximum'] = [[firstday, max], [lastday, max]]
+    return_object['minimum'] = min
+    return_object['maximum'] = max
+    # return_object['minimum'] = [[firstday, min], [lastday, min]]
+    # return_object['maximum'] = [[firstday, max], [lastday, max]]
 
     values_sc = make_storagecapcitycurve(site_name_only)
 

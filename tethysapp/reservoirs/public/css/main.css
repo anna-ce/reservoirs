@@ -1,3 +1,51 @@
+.carousel-control.left{
+  background-image: none;
+  top: 0%;
+  height: 5%;
+
+}
+.carousel-control.right{
+  background-image: none;
+  top: 0%;
+  height: 5%;
+}
+.carousel-indicators{
+  top:70%;
+  height: fit-content;
+}
+.carousel-indicators .active{
+  background-color: #d9534f;
+}
+.carousel-indicators li {
+  background-color: #1b95dc;
+}
+
+.carousel-control , .carousel-control .icon-prev {
+  color: #f7f7f7;
+  padding: 1vw;
+  background: #5cb85c;
+  width: auto;
+  height: auto;
+  box-sizing: content-box;
+}
+.carousel-control, .carousel-control .icon-next {
+  color: #f7f7f7;
+  padding: 1vw;
+  background: #5cb85c;
+  width: auto;
+  height: auto;
+  box-sizing: content-box;
+}
+.carousel-inner {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    margin-top: 2%;
+}
+
+
+
+
 .tab-content > .tab-pane,
 .pill-content > .pill-pane {
   display: block;
