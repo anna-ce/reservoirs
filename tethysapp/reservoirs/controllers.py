@@ -46,7 +46,7 @@ def home(request):
                 sites_presa.append(reservoir)
 
         variables = SelectInput(
-            display_text='List of Reservoirs',
+            display_text='',
             name='variables',
             multiple=False,
             original=True,
@@ -105,6 +105,20 @@ def GetSites(request):
 #     url = "http://128.187.106.131/app/index.php/dr/services/cuahsi_1_1.asmx?WSDL"
 #     water = pwml.WaterMLOperations(url=url)
 #     sites = water.GetSites()
+def GetInfoReal(request):
+    return_object = {}
+
+    fullsitecode = request.GET.get("full_code")
+    site_name = request.GET.get("site_name")
+    # myvalues = []
+    # url = "http://128.187.106.131/app/index.php/dr/services/cuahsi_1_1.asmx?WSDL"
+    water = pwml.WaterMLOperations(url=BASE_URL)
+
+    info_site = water.GetSiteInfo(fullsitecode)
+
+    return_object['siteInfo'] = info_site
+
+    return JsonResponse(return_object)
 
 def GetInfo(request):
     return_object = {}
@@ -137,14 +151,14 @@ def GetInfo(request):
 
     values_sc = make_storagecapcitycurve(site_name_only)
 
-    mysiteinfo = []
+    # mysiteinfo = []
     # myvalues = []
     # url = "http://128.187.106.131/app/index.php/dr/services/cuahsi_1_1.asmx?WSDL"
-    water = pwml.WaterMLOperations(url=BASE_URL)
+    # water = pwml.WaterMLOperations(url=BASE_URL)
 
-    mysiteinfo.append(water.GetSiteInfo(fullsitecode))
+    # mysiteinfo.append(water.GetSiteInfo(fullsitecode))
 
-    return_object['siteInfo'] = mysiteinfo
+    # return_object['siteInfo'] = mysiteinfo
     return_object['values_sc'] = values_sc
 
     return JsonResponse(return_object)

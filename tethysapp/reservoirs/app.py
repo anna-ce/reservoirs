@@ -40,6 +40,11 @@ class Reservoirs(TethysAppBase):
                 controller='reservoirs.controllers.GetInfo'
             ),
             UrlMap(
+                name='GetSiteInfo2',
+                url='GetSiteInfo2/',
+                controller='reservoirs.controllers.GetInfoReal'
+            ),
+            UrlMap(
                 name='GetValues',
                 url='GetValues/',
                 controller='reservoirs.controllers.GetValues'

@@ -1,4 +1,101 @@
 
+function getSiteInfoTable() {
+
+    let full_site_code = $("#variables").val();
+    let site_full_name = $("#variables option:selected").text();
+
+    let fsc = {
+      full_code: full_site_code,
+      site_name: site_full_name
+    }
+
+    $.ajax({
+    type: "GET",
+    url: "GetSiteInfo2/",
+    dataType: "JSON",
+    data: fsc,
+
+    success: function(result) {
+        console.log(result)
+
+
+        var myInfo = result.siteInfo;
+        const myOtherSites = [];
+
+        if (myInfo['siteInfo'][0]['siteName'].includes("Presa") || myInfo['siteInfo'][0]['siteName'].includes("presa")) {
+            myOtherSites.push(myInfo);
+        }
+
+        let myreservoir = $("#variables").val();
+
+        for (var i=0; i<myOtherSites.length; ++i) {
+
+            if (myreservoir == i) { break; }
+
+                let MyGoodInfo = myOtherSites[i];
+
+                var mysitename = MyGoodInfo.siteInfo[0].siteName;
+                var sitecode = MyGoodInfo.siteInfo[0].siteCode;
+                var citation = MyGoodInfo.siteInfo[0].citation;
+                var description = MyGoodInfo.siteInfo[0].description;
+                var variable = MyGoodInfo.siteInfo[0].variableName;
+                var latitude = MyGoodInfo.siteInfo[0].latitude;
+                var longitude = MyGoodInfo.siteInfo[0].longitude;
+                var beginDateTime = MyGoodInfo.siteInfo[0].beginDateTime;
+                var endDateTime = MyGoodInfo.siteInfo[0].endDateTime;
+
+        }
+
+        $("#info_site_table").html(
+
+          `<div class="table-responsive">
+            <table class="table">
+              <tbody>
+                <tr>
+                  <td>Site Name</td>
+                  <td>${mysitename}</td>
+                </tr>
+                <tr>
+                  <td>Site Code</td>
+                  <td>${sitecode}</td>
+                </tr>
+                <tr>
+                  <td>Organization</td>
+                  <td>${citation}</td>
+                </tr>
+                <tr>
+                  <td>Description</td>
+                  <td>${description}</td>
+                </tr>
+                <tr>
+                  <td>Active Variable</td>
+                  <td>${variable}</td>
+                </tr>
+                <tr>
+                  <td>Geolocation</td>
+                  <td>${latitude} , ${longitude} </td>
+                </tr>
+                <tr>
+                  <td>Beginning Date Time </td>
+                  <td>${beginDateTime.split("T")[0]} </td>
+                </tr>
+                <tr>
+                  <td>End Date Time </td>
+                  <td>${endDateTime.split("T")[0]} </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>`);
+          $("#info_site_table").removeClass("hidden");
+          $("#title-site").removeClass("hidden");
+    }})
+}
+
+
+$("#variables").on("change",function(){
+  getSiteInfoTable()
+})
+
 var map = L.map('mapid', {
     zoom: 8.25,
     minZoom: 1.25,
@@ -171,48 +268,48 @@ function getSiteInfo() {
         var min_vals_hist = Array(date_hist.length).fill(result.minimum);
         var max_vals_hist = Array(date_hist.length).fill(result.maximum);
 
-        var myInfo = result.siteInfo;
+        // var myInfo = result.siteInfo;
         const myOtherSites = [];
 
-        for(var i=0; i< myInfo.length; ++i){
-            if (myInfo[i]['siteInfo'][0]['siteName'].includes("Presa") || myInfo[i]['siteInfo'][0]['siteName'].includes("presa")) {
-                myOtherSites.push(myInfo[i]);
-            }
-        }
+        // for(var i=0; i< myInfo.length; ++i){
+        //     if (myInfo[i]['siteInfo'][0]['siteName'].includes("Presa") || myInfo[i]['siteInfo'][0]['siteName'].includes("presa")) {
+        //         myOtherSites.push(myInfo[i]);
+        //     }
+        // }
 
         let myreservoir = $("#variables").val();
 
-        for (var i=0; i<myOtherSites.length; ++i) {
+        // for (var i=0; i<myOtherSites.length; ++i) {
+        //
+        //     if (myreservoir == i) { break; }
+        //
+        //         let MyGoodInfo = myOtherSites[i];
+        //
+        //         var mysitename = MyGoodInfo.siteInfo[0].siteName;
+        //         var sitecode = MyGoodInfo.siteInfo[0].siteCode;
+        //         var citation = MyGoodInfo.siteInfo[0].citation;
+        //         var description = MyGoodInfo.siteInfo[0].description;
+        //         var variable = MyGoodInfo.siteInfo[0].variableName;
+        //         var latitude = MyGoodInfo.siteInfo[0].latitude;
+        //         var longitude = MyGoodInfo.siteInfo[0].longitude;
+        //
+        // }
 
-            if (myreservoir == i) { break; }
 
-                let MyGoodInfo = myOtherSites[i];
-
-                var mysitename = MyGoodInfo.siteInfo[0].siteName;
-                var sitecode = MyGoodInfo.siteInfo[0].siteCode;
-                var citation = MyGoodInfo.siteInfo[0].citation;
-                var description = MyGoodInfo.siteInfo[0].description;
-                var variable = MyGoodInfo.siteInfo[0].variableName;
-                var latitude = MyGoodInfo.siteInfo[0].latitude;
-                var longitude = MyGoodInfo.siteInfo[0].longitude;
-
-        }
-
-        $("#site_info_ta").html(
-            `<h1>${mysitename}</h1>
-                <p>
-            <div>Site Code: ${sitecode}</div>
-                </p>
-                <p>
-            <div>Organization: ${citation}</div>
-            <div>${description}</div>
-                </p>
-                <p>
-            <div>${variable}</div>
-                <p>
-            <div>Latitude: ${latitude} &nbsp;&nbsp;&nbsp;&nbsp; Longitude: ${longitude}</div>
-                </p>`);
-        $("#obsgraph").find('.modal-header').text(mysitename);
+          // `<h1>${mysitename}</h1>
+          //     <p>
+          // <div>Site Code: ${sitecode}</div>
+          //     </p>
+          //     <p>
+          // <div>Organization: ${citation}</div>
+          // <div>${description}</div>
+          //     </p>
+          //     <p>
+          // <div>${variable}</div>
+          //     <p>
+          // <div>Latitude: ${latitude} &nbsp;&nbsp;&nbsp;&nbsp; Longitude: ${longitude}</div>
+          //     </p>`
+        // $("#obsgraph").find('.modal-header').text(mysitename);
 
         var sc_max_trace = {
           type: "scatter",
@@ -245,11 +342,18 @@ function getSiteInfo() {
                     color: '#7f7f7f'
                     }
                 }
-            }
+            },
+            autosize:true
+
         };
 
         Plotly.newPlot('site_sc_chart', data, layout);
-
+        window.onresize = function() {
+            Plotly.relayout('site_sc_chart', {
+                'xaxis.autorange': true,
+                'yaxis.autorange': true
+            });
+        };
         var hist_trace = {
           type: "scatter",
           name: 'Water Level Reported',
@@ -295,7 +399,8 @@ function getSiteInfo() {
                     color: '#7f7f7f'
                     }
                 }
-            }
+            },
+            autosize:true
         };
 
 
