@@ -146,7 +146,11 @@ def GetInfo(request):
     lastday = historical[len(historical)-1][0]
     return_object['minimum'] = min
     return_object['maximum'] = max
-    last_elv= wlh_data_reservoir[site_name]['dataValue']
+    last_elv = wlh_data_reservoir[site_name]['dataValue']
+    return_object['last_elv'] = last_elv
+    avg_elevations = get_historicalaverages(site_name_only)
+    return_object['el_um'] = avg_elevations['elevacion_um']
+    return_object['el_ua'] = avg_elevations['elevacion_ua']
     # return_object['minimum'] = [[firstday, min], [lastday, min]]
     # return_object['maximum'] = [[firstday, max], [lastday, max]]
 

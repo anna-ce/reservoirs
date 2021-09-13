@@ -364,7 +364,12 @@ function getSiteInfo() {
             autosize:true
         };
         Plotly.newPlot('site_hist_chart', data_hist, layout);
-
+        window.onresize = function() {
+            Plotly.relayout('site_hist_chart', {
+                'xaxis.autorange': true,
+                'yaxis.autorange': true
+            });
+        };
         $("#site_info_ta").html(
 
           `<div class="table-responsive">
@@ -391,6 +396,40 @@ function getSiteInfo() {
                 <tr>
                   <td>Minimun Volume</td>
                   <td>${result['volumes']['Min']}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>`);
+        $("#site_info_ta2").html(
+
+          `<div class="table-responsive">
+            <table class="table table-hover">
+            <thead>
+              <tr>
+              <th>Elevation Type</th>
+              <th>Value (M)</th>
+              </tr>
+            </thead>
+              <tbody>
+                <tr>
+                  <td>Last Elevation</td>
+                  <td>${result['last_elv']} </td>
+                </tr>
+                <tr>
+                  <td>Maximun Elevation</td>
+                  <td>${result['maximum']}</td>
+                </tr>
+                <tr>
+                  <td>Annually Average Elevation</td>
+                  <td>${result['el_ua']}</td>
+                </tr>
+                <tr>
+                  <td>Monthly Average Elevation</td>
+                  <td>${result['el_um']}</td>
+                </tr>
+                <tr>
+                  <td>Minimun Elevation</td>
+                  <td>${result['minimum']}</td>
                 </tr>
               </tbody>
             </table>

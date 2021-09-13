@@ -84,8 +84,8 @@ def get_historicalaverages(site_name_only):
 
     df = df[['Nivel', site_name_only]].dropna()  # load the right columns of data and drop the null values
     df = df.tail(365)
-    averages['Elevacion, Ultimo Año'] = round(df[site_name_only].mean(), 2)
+    averages['elevacion_ua'] = round(df[site_name_only].mean(), 2)
     df = df.tail(31)
-    averages['Elevacion, Ultimo Mes'] = round(df[site_name_only].mean(), 2)
+    averages['elevacion_um'] = round(df[site_name_only].mean(), 2)
 
     return averages
