@@ -249,7 +249,7 @@ function getSiteInfo() {
       full_code: full_site_code,
       site_name: site_full_name
     }
-
+    $("#info_site-loading").removeClass("hidden");
     $.ajax({
     type: "GET",
     url: "GetSiteInfo/",
@@ -434,6 +434,7 @@ function getSiteInfo() {
               </tbody>
             </table>
           </div>`);
+        $("#info_site-loading").addClass("hidden");
 
 
     }})
@@ -537,7 +538,7 @@ function getForecast() {
               visible: 'legendonly'
             }
             var values_avg_trace2 = {
-              type: "scatter",
+              type: "bar",
               name: 'Average StreamFlow Forecast',
               mode: 'lines',
               x: mydateTime,
@@ -547,11 +548,11 @@ function getForecast() {
               // line: {color: '#17BECF'}
             }
             var values_se5_trace2 = {
-              type: "scatter",
+              type: "bar",
               name: '75% StreamFlow Forecast',
               x: mydateTime,
               y: values_se2,
-              fill: 'tozeroy',
+              // fill: 'tozeroy',
               line: {
                 dash: 'dashdot',
                 width: 4
