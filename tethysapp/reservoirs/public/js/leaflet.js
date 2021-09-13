@@ -233,9 +233,16 @@ function getValues() {
                         color: '#7f7f7f'
                         }
                     }
-                }
+                },
+                autosize:true
             };
             Plotly.newPlot('myDiv', data, layout);
+            window.onresize = function() {
+                Plotly.relayout('myDiv', {
+                    'xaxis.autorange': true,
+                    'yaxis.autorange': true
+                });
+            };
         }
     })
 }
@@ -583,7 +590,8 @@ function getForecast() {
                         color: '#7f7f7f'
                         }
                     }
-                }
+                },
+                autosize:true
             };
             var layout2 = {
                 title: 'Forecasted Volume',
@@ -596,10 +604,21 @@ function getForecast() {
                         color: '#7f7f7f'
                         }
                     }
-                }
+                },
+                autosize:true
             };
             Plotly.newPlot('forecast_chart', data, layout);
             Plotly.newPlot('volume_chart', data2, layout2);
+            window.onresize = function() {
+                Plotly.relayout('forecast_chart', {
+                    'xaxis.autorange': true,
+                    'yaxis.autorange': true
+                });
+                Plotly.relayout('volume_chart', {
+                    'xaxis.autorange': true,
+                    'yaxis.autorange': true
+                });
+            };
           }
           else{
             $("#forecast_chart").html(result['error']);
@@ -630,10 +649,40 @@ function load_timeseries() {
 $("#timeseries").click(function() {
     load_timeseries();
 })
-// $('#forecast_tab_link').click(function(){
-//     getForecast();
-// })
-//
-// $('#mytimeseries_tab_link').click(function(){
-//     getValues();
-// })
+
+
+$('#forecast_tab_link').click(function(){
+  Plotly.Plots.resize("forecast_chart");
+  Plotly.relayout("forecast_chart", {
+      'xaxis.autorange': true,
+      'yaxis.autorange': true
+    });
+
+})
+
+$('#mytimeseries_tab_link').click(function(){
+  Plotly.Plots.resize("myDiv");
+  Plotly.relayout("myDiv", {
+      'xaxis.autorange': true,
+      'yaxis.autorange': true
+    });
+})
+$('#volumechart_tab_link').click(function(){
+  Plotly.Plots.resize("volume_chart");
+  Plotly.relayout("volume_chart", {
+      'xaxis.autorange': true,
+      'yaxis.autorange': true
+    });
+})
+$('#siteinfo_tab_link').click(function(){
+  Plotly.Plots.resize("site_sc_chart");
+  Plotly.relayout("site_sc_chart", {
+      'xaxis.autorange': true,
+      'yaxis.autorange': true
+    });
+  Plotly.Plots.resize("site_hist_chart");
+  Plotly.relayout("site_hist_chart", {
+      'xaxis.autorange': true,
+      'yaxis.autorange': true
+    });
+})
