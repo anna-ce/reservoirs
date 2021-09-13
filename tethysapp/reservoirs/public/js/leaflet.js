@@ -268,48 +268,9 @@ function getSiteInfo() {
         var min_vals_hist = Array(date_hist.length).fill(result.minimum);
         var max_vals_hist = Array(date_hist.length).fill(result.maximum);
 
-        // var myInfo = result.siteInfo;
-        const myOtherSites = [];
-
-        // for(var i=0; i< myInfo.length; ++i){
-        //     if (myInfo[i]['siteInfo'][0]['siteName'].includes("Presa") || myInfo[i]['siteInfo'][0]['siteName'].includes("presa")) {
-        //         myOtherSites.push(myInfo[i]);
-        //     }
-        // }
 
         let myreservoir = $("#variables").val();
 
-        // for (var i=0; i<myOtherSites.length; ++i) {
-        //
-        //     if (myreservoir == i) { break; }
-        //
-        //         let MyGoodInfo = myOtherSites[i];
-        //
-        //         var mysitename = MyGoodInfo.siteInfo[0].siteName;
-        //         var sitecode = MyGoodInfo.siteInfo[0].siteCode;
-        //         var citation = MyGoodInfo.siteInfo[0].citation;
-        //         var description = MyGoodInfo.siteInfo[0].description;
-        //         var variable = MyGoodInfo.siteInfo[0].variableName;
-        //         var latitude = MyGoodInfo.siteInfo[0].latitude;
-        //         var longitude = MyGoodInfo.siteInfo[0].longitude;
-        //
-        // }
-
-
-          // `<h1>${mysitename}</h1>
-          //     <p>
-          // <div>Site Code: ${sitecode}</div>
-          //     </p>
-          //     <p>
-          // <div>Organization: ${citation}</div>
-          // <div>${description}</div>
-          //     </p>
-          //     <p>
-          // <div>${variable}</div>
-          //     <p>
-          // <div>Latitude: ${latitude} &nbsp;&nbsp;&nbsp;&nbsp; Longitude: ${longitude}</div>
-          //     </p>`
-        // $("#obsgraph").find('.modal-header').text(mysitename);
 
         var sc_max_trace = {
           type: "scatter",
@@ -402,10 +363,40 @@ function getSiteInfo() {
             },
             autosize:true
         };
-
-
-
         Plotly.newPlot('site_hist_chart', data_hist, layout);
+
+        $("#site_info_ta").html(
+
+          `<div class="table-responsive">
+            <table class="table table-hover">
+            <thead>
+              <tr>
+              <th>Volume Type</th>
+              <th>Value (MCM)</th>
+              </tr>
+            </thead>
+              <tbody>
+                <tr>
+                  <td>Last Volume</td>
+                  <td>${result['volumes']['Actual']} </td>
+                </tr>
+                <tr>
+                  <td>Util Volume</td>
+                  <td>${result['volumes']['Util']}</td>
+                </tr>
+                <tr>
+                  <td>Maximun Volume</td>
+                  <td>${result['volumes']['Max']}</td>
+                </tr>
+                <tr>
+                  <td>Minimun Volume</td>
+                  <td>${result['volumes']['Min']}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>`);
+
+
     }})
 }
 

@@ -146,11 +146,12 @@ def GetInfo(request):
     lastday = historical[len(historical)-1][0]
     return_object['minimum'] = min
     return_object['maximum'] = max
+    last_elv= wlh_data_reservoir[site_name]['dataValue']
     # return_object['minimum'] = [[firstday, min], [lastday, min]]
     # return_object['maximum'] = [[firstday, max], [lastday, max]]
 
     values_sc = make_storagecapcitycurve(site_name_only)
-
+    volumes_info = get_reservoir_volumes(site_name_only,data_site,last_elv)
     # mysiteinfo = []
     # myvalues = []
     # url = "http://128.187.106.131/app/index.php/dr/services/cuahsi_1_1.asmx?WSDL"
@@ -160,6 +161,7 @@ def GetInfo(request):
 
     # return_object['siteInfo'] = mysiteinfo
     return_object['values_sc'] = values_sc
+    return_object['volumes'] = volumes_info
 
     return JsonResponse(return_object)
 

@@ -55,3 +55,37 @@ def get_historicaldata(site_name_only):
         'lastdate': time,
     }
     return histdata
+
+def get_reservoir_volumes(site_name_only, info,curr_elev):
+    volumes = {}
+    app_workspace = app.get_app_workspace()
+
+    rating_curves_file_path = os.path.join(app.get_app_workspace().path, 'rating_curves_DR.xlsx')
+    df = pd.read_excel(rating_curves_file_path)[[site_name_only + '_Elev_m', site_name_only + '_Vol_MCM']]
+    volumes['Actual'] = df.loc[df[site_name_only + '_Elev_m'] == float(curr_elev)].values[0, 1]
+    volumes['Min'] = df.loc[df[site_name_only + '_Elev_m'] == info['minlvl']].values[0, 1]
+    volumes['Max'] = df.loc[df[site_name_only + '_Elev_m'] == info['maxlvl']].values[0, 1]
+    volumes['Util'] = volumes['Actual'] - volumes['Min']
+    for key in volumes:
+        volumes[key] = round(volumes[key], 3)
+    return volumes
+
+def get_historicalaverages(site_name_only):
+    """
+    Get the average elevation for the last 365 days and last 31 days
+    """
+    averages = {}
+
+    # open the sheet with historical levels
+    app_workspace = app.get_app_workspace()
+    damsheet = os.path.join(app_workspace.path, 'elevations.xlsx')
+    df = pd.read_excel(damsheet)
+
+
+    df = df[['Nivel', site_name_only]].dropna()  # load the right columns of data and drop the null values
+    df = df.tail(365)
+    averages['Elevacion, Ultimo Año'] = round(df[site_name_only].mean(), 2)
+    df = df.tail(31)
+    averages['Elevacion, Ultimo Mes'] = round(df[site_name_only].mean(), 2)
+
+    return averages
