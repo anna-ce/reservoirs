@@ -112,6 +112,7 @@
                 <div class="panel-body">
                   <div class="flex-container-row"><img id="mytimeseries-loading" class="view-file hidden" src="{% static 'reservoirs/images/loader.gif' %}" /></div>
                   <div id="myDiv"></div>
+                  <div id="error_ts" class = "hidden"></div>
                 </div>
               </div>
             </div>
@@ -120,6 +121,7 @@
                 <div class="panel-body">
                   <div class="flex-container-row"><img id="fv-loading" class="view-file hidden" src="{% static 'reservoirs/images/loader.gif' %}" /></div>
                   <div id="volume_chart"></div>
+                  <div id="error_vol" class = "hidden"></div>
                 </div>
               </div>
             </div>
@@ -129,7 +131,7 @@
                   <div class="flex-container-row"><img id="fe-loading" class="view-file hidden" src="{% static 'reservoirs/images/loader.gif' %}" /></div>
 
                   <div id="forecast_chart"></div>
-
+                  <div id="error_fore" class = "hidden"></div>
                 </div>
               </div>
             </div>

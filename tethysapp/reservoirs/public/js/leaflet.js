@@ -189,6 +189,8 @@ getSitesNow();
 function getValues() {
   try{
     $('#mytimeseries-loading').removeClass('hidden');
+    $('#error_ts').addClass('hidden');
+    $('#myDiv').addClass('hidden');
     let site_full_code = $("#variables").val();
     let fsc = {
         full_code: site_full_code
@@ -205,6 +207,9 @@ function getValues() {
             // Plotly.purge('myDiv')
             $('#mytimeseries-loading').addClass('hidden');
             if(!result.hasOwnProperty('error')){
+              $('#error_ts').addClass('hidden');
+              $('#myDiv').removeClass('hidden');
+
               var values = result.myvalues;
               specific_values = values[0]['values'];
               sitename = values[0]['values'][0]['siteName']
@@ -258,7 +263,9 @@ function getValues() {
               };
             }
             else{
-              $("#myDiv").html(`${result['error']}`)
+              $('#error_ts').removeClass('hidden');
+              $('#myDiv').addClass('hidden');
+              $("#error_ts").html(`${result['error']}`)
             }
 
 
@@ -267,6 +274,7 @@ function getValues() {
   }
   catch(e){
     $('#mytimeseries-loading').addClass('hidden');
+    $('#error_ts').addClass('hidden');
   }
 
 }
@@ -274,7 +282,8 @@ function getValues() {
 function getSiteInfo() {
   try{
     $("#info_site-loading").removeClass("hidden");
-
+    $("#container_tabs_info").addClass("hidden");
+    $("#error_info").addClass("hidden");
     let full_site_code = $("#variables").val();
     let site_full_name = $("#variables option:selected").text();
 
@@ -473,6 +482,8 @@ function getSiteInfo() {
   }
   catch(e){
     $("#info_site-loading").addClass("hidden");
+    $("#container_tabs_info").addClass("hidden");
+    $("#error_info").addClass("hidden");
   }
 
 }
@@ -481,7 +492,10 @@ function getForecast() {
 
     $('#fe-loading').removeClass('hidden');
     $('#fv-loading').removeClass('hidden');
-
+    $('#error_vol').addClass('hidden');
+    $('#error_fore').addClass('hidden');
+    $('#forecast_chart').addClass('hidden');
+    $('#volume_chart').addClass('hidden');
     let site_full_name = $("#variables option:selected").text();
     let fsc = {
         site_name: site_full_name
@@ -500,6 +514,11 @@ function getForecast() {
             $('#fv-loading').addClass('hidden');
 
             if(!result.hasOwnProperty('error')){
+              $('#error_vol').addClass('hidden');
+              $('#error_fore').addClass('hidden');
+              $('#forecast_chart').removeClass('hidden');
+              $('#volume_chart').removeClass('hidden');
+
               var values_avg = result.avg;
               var values_se = result.se5;
               var values_max = result.max;
@@ -652,8 +671,12 @@ function getForecast() {
               };
             }
             else{
-              $("#forecast_chart").html(result['error']);
-              $("#volume_chart").html(result['error']);
+              $('#error_vol').removeClass('hidden');
+              $('#error_fore').removeClass('hidden');
+              $('#forecast_chart').addClass('hidden');
+              $('#volume_chart').addClass('hidden');
+              $("#error_vol").html(result['error']);
+              $("#error_fore").html(result['error']);
             }
 
           }
@@ -661,6 +684,10 @@ function getForecast() {
             console.log(e);
             $('#fe-loading').addClass('hidden');
             $('#fv-loading').addClass('hidden');
+            $('#error_vol').addClass('hidden');
+            $('#error_fore').addClass('hidden');
+            $('#forecast_chart').addClass('hidden');
+            $('#volume_chart').addClass('hidden');
           }
         }
     })
