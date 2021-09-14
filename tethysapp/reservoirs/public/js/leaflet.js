@@ -16,9 +16,8 @@ function getSiteInfoTable() {
     data: fsc,
 
     success: function(result) {
+      try{
         console.log(result)
-
-
         var myInfo = result.siteInfo;
         const myOtherSites = [];
 
@@ -88,7 +87,12 @@ function getSiteInfoTable() {
           </div>`);
           $("#info_site_table").removeClass("hidden");
           $("#title-site").removeClass("hidden");
-    }})
+      }
+      catch(e){
+        console.log(e);
+      }
+    }
+  })
 }
 
 
@@ -110,14 +114,21 @@ var Esri_Imagery_Labels = L.esri.basemapLayer('ImageryLabels');
 basemaps = {"Basemap": L.layerGroup([Esri_WorldImagery, Esri_Imagery_Labels]).addTo(map)}
 
 
-var GetSitesNow = function(){
+var getSitesNow = function(){
     $.ajax({
         type: "GET",
         url: "getMySites/",
         dataType: "JSON",
 
         success: function(result) {
+          try{
+            var damIcon = L.icon({
+                iconUrl:'https://img.icons8.com/color/48/000000/dam.png',
+                shadowUrl:'https://img.icons8.com/color/48/000000/dam.png',
 
+                iconSize:[35, 35], // size of the icon
+                shadowSize:[35, 35], // size of the shadow
+            });
             var mySites = result.siteInfo;
             const myGoodSites = [];
 
@@ -130,7 +141,7 @@ var GetSitesNow = function(){
 
             for(var i=0; i< myGoodSites.length; ++i){
                 var markerLocation = new L.LatLng(myGoodSites[i]['latitude'], myGoodSites[i]['longitude']);
-                var marker = new L.Marker(markerLocation)
+                var marker = new L.Marker(markerLocation,{icon: damIcon})
                 marker.bindPopup(myGoodSites[i]['sitename']);
                 map.addLayer(marker)
             }
@@ -147,7 +158,7 @@ var GetSitesNow = function(){
                     for (var i=0; i<myGoodSites.length; ++i) {
 
                         var markerLocation = new L.LatLng(myGoodSites[i]['latitude'], myGoodSites[i]['longitude']);
-                        var marker = new L.Marker(markerLocation);
+                        var marker = new L.Marker(markerLocation,{icon: damIcon});
                         marker.bindPopup(myGoodSites[i]['sitename']);
                         map.addLayer(marker)
                         markers.push(marker)
@@ -165,16 +176,19 @@ var GetSitesNow = function(){
                     }
                 }
             })
+          }
+          catch(e){
+            console.log(e);
+          }
+
          }
     })
 }
-GetSitesNow();
+getSitesNow();
 
 function getValues() {
-
+  try{
     $('#mytimeseries-loading').removeClass('hidden');
-
-
     let site_full_code = $("#variables").val();
     let fsc = {
         full_code: site_full_code
@@ -190,64 +204,76 @@ function getValues() {
 
             // Plotly.purge('myDiv')
             $('#mytimeseries-loading').addClass('hidden');
+            if(!result.hasOwnProperty('error')){
+              var values = result.myvalues;
+              specific_values = values[0]['values'];
+              sitename = values[0]['values'][0]['siteName']
+              const mydatavalues = [];
+              const mydateTime = [];
 
+              for(var i=0; i<specific_values.length; ++i){
+                  mydatavalues.push(specific_values[i]['dataValue']);
+                  mydateTime.push(specific_values[i]['dateTime'])
+              }
 
-            var values = result.myvalues;
-            specific_values = values[0]['values'];
-            sitename = values[0]['values'][0]['siteName']
-            const mydatavalues = [];
-            const mydateTime = [];
+              var values_trace = {
+                type: "scatter",
+                x: mydateTime,
+                y: mydatavalues,
+                line: {color: '#17BECF'}
+              }
 
-            for(var i=0; i<specific_values.length; ++i){
-                mydatavalues.push(specific_values[i]['dataValue']);
-                mydateTime.push(specific_values[i]['dateTime'])
+              var data = [values_trace];
+
+              var layout = {
+                  title: 'Water Surface Level',
+                  xaxis: {
+                      title: {
+                          text: 'Years [yr]',
+                          font: {
+                          family: 'Courier New, monospace',
+                          size: 18,
+                          color: '#7f7f7f'
+                          }
+                      },
+                  },
+                  yaxis: {
+                      title: {
+                          text: 'Meters [m]',
+                          font: {
+                          family: 'Courier New, monospace',
+                          size: 18,
+                          color: '#7f7f7f'
+                          }
+                      }
+                  },
+                  autosize:true
+              };
+              Plotly.newPlot('myDiv', data, layout);
+              window.onresize = function() {
+                  Plotly.relayout('myDiv', {
+                      'xaxis.autorange': true,
+                      'yaxis.autorange': true
+                  });
+              };
+            }
+            else{
+              $("#myDiv").html(`${result['error']}`)
             }
 
-            var values_trace = {
-              type: "scatter",
-              x: mydateTime,
-              y: mydatavalues,
-              line: {color: '#17BECF'}
-            }
 
-            var data = [values_trace];
-
-            var layout = {
-                title: 'Water Surface Level',
-                xaxis: {
-                    title: {
-                        text: 'Years [yr]',
-                        font: {
-                        family: 'Courier New, monospace',
-                        size: 18,
-                        color: '#7f7f7f'
-                        }
-                    },
-                },
-                yaxis: {
-                    title: {
-                        text: 'Meters [m]',
-                        font: {
-                        family: 'Courier New, monospace',
-                        size: 18,
-                        color: '#7f7f7f'
-                        }
-                    }
-                },
-                autosize:true
-            };
-            Plotly.newPlot('myDiv', data, layout);
-            window.onresize = function() {
-                Plotly.relayout('myDiv', {
-                    'xaxis.autorange': true,
-                    'yaxis.autorange': true
-                });
-            };
         }
     })
+  }
+  catch(e){
+    $('#mytimeseries-loading').addClass('hidden');
+  }
+
 }
 
 function getSiteInfo() {
+  try{
+    $("#info_site-loading").removeClass("hidden");
 
     let full_site_code = $("#variables").val();
     let site_full_name = $("#variables option:selected").text();
@@ -256,7 +282,6 @@ function getSiteInfo() {
       full_code: full_site_code,
       site_name: site_full_name
     }
-    $("#info_site-loading").removeClass("hidden");
     $.ajax({
     type: "GET",
     url: "GetSiteInfo/",
@@ -264,6 +289,9 @@ function getSiteInfo() {
     data: fsc,
 
     success: function(result) {
+      try{
+        $("#error_info").addClass("hidden");
+        $("#container_tabs_info").removeClass("hidden");
         console.log(result)
         var storage_capacity = result.values_sc;
         var elvs = storage_capacity.map(function (i) { return i[1]})
@@ -316,12 +344,6 @@ function getSiteInfo() {
         };
 
         Plotly.newPlot('site_sc_chart', data, layout);
-        window.onresize = function() {
-            Plotly.relayout('site_sc_chart', {
-                'xaxis.autorange': true,
-                'yaxis.autorange': true
-            });
-        };
         var hist_trace = {
           type: "scatter",
           name: 'Water Level Reported',
@@ -348,16 +370,7 @@ function getSiteInfo() {
 
         var layout = {
             title: 'Historical Data',
-            xaxis: {
-                title: {
-                    text: 'Time',
-                    font: {
-                    family: 'Courier New, monospace',
-                    size: 18,
-                    color: '#7f7f7f'
-                    }
-                }
-            },
+
             yaxis: {
                 title: {
                     text: 'Water Surface Level [m]',
@@ -368,11 +381,17 @@ function getSiteInfo() {
                     }
                 }
             },
-            autosize:true
+            autosize:true,
+            showlegend: true,
+            legend: {"orientation": "h"}
         };
         Plotly.newPlot('site_hist_chart', data_hist, layout);
         window.onresize = function() {
             Plotly.relayout('site_hist_chart', {
+                'xaxis.autorange': true,
+                'yaxis.autorange': true
+            });
+            Plotly.relayout('site_sc_chart', {
                 'xaxis.autorange': true,
                 'yaxis.autorange': true
             });
@@ -442,9 +461,20 @@ function getSiteInfo() {
             </table>
           </div>`);
         $("#info_site-loading").addClass("hidden");
-
+      }
+      catch(e){
+        $("#info_site-loading").addClass("hidden");
+        $("#container_tabs_info").addClass("hidden");
+        $("#error_info").removeClass("hidden");
+        $('#error_info').html(`${result.error}`)
+      }
 
     }})
+  }
+  catch(e){
+    $("#info_site-loading").addClass("hidden");
+  }
+
 }
 
 function getForecast() {
@@ -464,164 +494,173 @@ function getForecast() {
         data: fsc,
 
         success: function(result) {
-          console.log(result);
-          $('#fe-loading').addClass('hidden');
-          $('#fv-loading').addClass('hidden');
+          try{
+            console.log(result);
+            $('#fe-loading').addClass('hidden');
+            $('#fv-loading').addClass('hidden');
 
-          if(!result.hasOwnProperty('error')){
-            var values_avg = result.avg;
-            var values_se = result.se5;
-            var values_max = result.max;
-            var mydateTime =  result.date;
-            // var init_elv = result.init_elv;
+            if(!result.hasOwnProperty('error')){
+              var values_avg = result.avg;
+              var values_se = result.se5;
+              var values_max = result.max;
+              var mydateTime =  result.date;
+              // var init_elv = result.init_elv;
 
-            var values_avg2 = result.avg2;
-            var values_se2 = result.se52;
-            var values_max2 = result.max2;
-            var mydateTime2 =  result.date2;
-            // var init_vol = result.init_vol;
-            //
-            //
-            // var min_vals = [values_avg[0],values_se[0]];
-            // var chart_min =  Math.min.apply(null,min_vals);
-            //
-            // console.log([values_max[0],values_avg[0],values_se[0]]);
-            // console.log(chart_min);
-            // var data_chart_limits = Array(mydateTime.length).fill(chart_min-20);
-            // var init_chart_limits = Array(mydateTime.length).fill(init_elv);
-            // console.log(data_chart_limits);
+              var values_avg2 = result.avg2;
+              var values_se2 = result.se52;
+              var values_max2 = result.max2;
+              var mydateTime2 =  result.date2;
+              // var init_vol = result.init_vol;
+              //
+              //
+              // var min_vals = [values_avg[0],values_se[0]];
+              // var chart_min =  Math.min.apply(null,min_vals);
+              //
+              // console.log([values_max[0],values_avg[0],values_se[0]]);
+              // console.log(chart_min);
+              // var data_chart_limits = Array(mydateTime.length).fill(chart_min-20);
+              // var init_chart_limits = Array(mydateTime.length).fill(init_elv);
+              // console.log(data_chart_limits);
 
-            // var values_limits_trace= {
-            //   type: "scatter",
-            //   x: mydateTime,
-            //   y: init_chart_limits,
-            //   mode: 'lines',
-            //   // line: {color: 'rgba(255,0,0,0.2)'},
-            //   name: '',
-            //
-            // }
-            var values_max_trace = {
-              type: "scatter",
-              name: 'Max StreamFlow Forecast',
-              x: mydateTime,
-              y: values_max,
-              fill: 'tonexty',
-              mode: 'lines',
-              visible:'legendonly'
-            }
-            var values_avg_trace = {
-              type: "scatter",
-              name: 'Average StreamFlow Forecast',
-              mode: 'lines',
-              x: mydateTime,
-              y: values_avg,
-              // line: {color: '#17BECF'}
-            }
-            var values_se5_trace = {
-              type: "scatter",
-              name: '75% StreamFlow Forecast',
-              x: mydateTime,
-              y: values_se,
-              line: {
-                dash: 'dashdot',
-                width: 4
+              // var values_limits_trace= {
+              //   type: "scatter",
+              //   x: mydateTime,
+              //   y: init_chart_limits,
+              //   mode: 'lines',
+              //   // line: {color: 'rgba(255,0,0,0.2)'},
+              //   name: '',
+              //
+              // }
+              var values_max_trace = {
+                type: "scatter",
+                name: 'Max StreamFlow Forecast',
+                x: mydateTime,
+                y: values_max,
+                fill: 'tonexty',
+                mode: 'lines',
+                visible:'legendonly'
               }
-            }
-            // var init_limits_trace= {
-            //   type: "scatter",
-            //   x: mydateTime,
-            //   y: init_chart_limits,
-            //   mode: 'lines',
-            //   // line: {color: 'rgba(255,0,0,0.2)'},
-            //   name: 'Initial Volume',
-            // }
-            var values_max_trace2 = {
-              type: "scatter",
-              name: 'Max StreamFlow Forecast',
-              x: mydateTime,
-              y: values_max2,
-              fill: 'tonexty',
-              mode: 'lines',
-              visible: 'legendonly'
-            }
-            var values_avg_trace2 = {
-              type: "bar",
-              name: 'Average StreamFlow Forecast',
-              mode: 'lines',
-              x: mydateTime,
-              y: values_avg2,
-              fill: 'tozeroy',
-
-              // line: {color: '#17BECF'}
-            }
-            var values_se5_trace2 = {
-              type: "bar",
-              name: '75% StreamFlow Forecast',
-              x: mydateTime,
-              y: values_se2,
-              // fill: 'tozeroy',
-              line: {
-                dash: 'dashdot',
-                width: 4
+              var values_avg_trace = {
+                type: "scatter",
+                name: 'Average StreamFlow Forecast',
+                mode: 'lines',
+                x: mydateTime,
+                y: values_avg,
+                // line: {color: '#17BECF'}
               }
+              var values_se5_trace = {
+                type: "scatter",
+                name: '75% StreamFlow Forecast',
+                x: mydateTime,
+                y: values_se,
+                line: {
+                  dash: 'dashdot',
+                  width: 4
+                }
+              }
+              // var init_limits_trace= {
+              //   type: "scatter",
+              //   x: mydateTime,
+              //   y: init_chart_limits,
+              //   mode: 'lines',
+              //   // line: {color: 'rgba(255,0,0,0.2)'},
+              //   name: 'Initial Volume',
+              // }
+              var values_max_trace2 = {
+                type: "scatter",
+                name: 'Max StreamFlow Forecast',
+                x: mydateTime,
+                y: values_max2,
+                fill: 'tonexty',
+                mode: 'lines',
+                visible: 'legendonly'
+              }
+              var values_avg_trace2 = {
+                type: "bar",
+                name: 'Average StreamFlow Forecast',
+                mode: 'lines',
+                x: mydateTime,
+                y: values_avg2,
+                fill: 'tozeroy',
+
+                // line: {color: '#17BECF'}
+              }
+              var values_se5_trace2 = {
+                type: "bar",
+                name: '75% StreamFlow Forecast',
+                x: mydateTime,
+                y: values_se2,
+                // fill: 'tozeroy',
+                line: {
+                  dash: 'dashdot',
+                  width: 4
+                }
+              }
+              // var data = []
+              // if(chart_min > 0){
+              //   var data = [values_se5_trace,values_max_trace,values_avg_trace];
+              //   // var data = [values_limits_trace,values_max_trace,values_avg_trace,values_se5_trace];
+              // }
+              // else{
+              //   var data = [values_avg_trace,values_max_trace,values_se5_trace];
+              //   // var data = [values_limits_trace,values_max_trace,values_avg_trace,values_se5_trace];
+              // }
+              // var data = [values_limits_trace,values_max_trace,values_avg_trace,values_se5_trace];
+              var data = [values_avg_trace,values_max_trace,values_se5_trace];
+
+              var data2 = [values_avg_trace2,values_se5_trace2,values_max_trace2];
+
+              var layout = {
+                  title: 'Forecasted Water Surface Level',
+                  yaxis: {
+                      title: {
+                          text: 'Water Surface Level [m]',
+                          font: {
+                          family: 'Courier New, monospace',
+                          size: 18,
+                          color: '#7f7f7f'
+                          }
+                      }
+                  },
+                  autosize:true
+              };
+              var layout2 = {
+                  title: 'Forecasted Volume',
+                  yaxis: {
+                      title: {
+                          text: 'Volume [MCM]',
+                          font: {
+                          family: 'Courier New, monospace',
+                          size: 18,
+                          color: '#7f7f7f'
+                          }
+                      }
+                  },
+                  autosize:true
+              };
+              Plotly.newPlot('forecast_chart', data, layout);
+              Plotly.newPlot('volume_chart', data2, layout2);
+              window.onresize = function() {
+                  Plotly.relayout('forecast_chart', {
+                      'xaxis.autorange': true,
+                      'yaxis.autorange': true
+                  });
+                  Plotly.relayout('volume_chart', {
+                      'xaxis.autorange': true,
+                      'yaxis.autorange': true
+                  });
+              };
             }
-            // var data = []
-            // if(chart_min > 0){
-            //   var data = [values_se5_trace,values_max_trace,values_avg_trace];
-            //   // var data = [values_limits_trace,values_max_trace,values_avg_trace,values_se5_trace];
-            // }
-            // else{
-            //   var data = [values_avg_trace,values_max_trace,values_se5_trace];
-            //   // var data = [values_limits_trace,values_max_trace,values_avg_trace,values_se5_trace];
-            // }
-            // var data = [values_limits_trace,values_max_trace,values_avg_trace,values_se5_trace];
-            var data = [values_avg_trace,values_max_trace,values_se5_trace];
+            else{
+              $("#forecast_chart").html(result['error']);
+              $("#volume_chart").html(result['error']);
+            }
 
-            var data2 = [values_avg_trace2,values_se5_trace2,values_max_trace2];
-
-            var layout = {
-                title: 'Forecasted Water Surface Level',
-                yaxis: {
-                    title: {
-                        text: 'Water Surface Level [m]',
-                        font: {
-                        family: 'Courier New, monospace',
-                        size: 18,
-                        color: '#7f7f7f'
-                        }
-                    }
-                },
-                autosize:true
-            };
-            var layout2 = {
-                title: 'Forecasted Volume',
-                yaxis: {
-                    title: {
-                        text: 'Volume [MCM]',
-                        font: {
-                        family: 'Courier New, monospace',
-                        size: 18,
-                        color: '#7f7f7f'
-                        }
-                    }
-                },
-                autosize:true
-            };
-            Plotly.newPlot('forecast_chart', data, layout);
-            Plotly.newPlot('volume_chart', data2, layout2);
-            window.onresize = function() {
-                Plotly.relayout('forecast_chart', {
-                    'xaxis.autorange': true,
-                    'yaxis.autorange': true
-                });
-                Plotly.relayout('volume_chart', {
-                    'xaxis.autorange': true,
-                    'yaxis.autorange': true
-                });
-            };
           }
-          else{
-            $("#forecast_chart").html(result['error']);
+          catch(e){
+            console.log(e);
+            $('#fe-loading').addClass('hidden');
+            $('#fv-loading').addClass('hidden');
           }
         }
     })
@@ -631,11 +670,13 @@ function load_timeseries() {
 
     let myreservoir = $("#variables").val();
 
+
     if (myreservoir === 'none') {
 
         alert("You have not selected a reservoir");
 
     } else {
+      $("#presa_name").html(`${$("#variables option:selected").text()}`)
         // $("#siteinfo").html('');
         // $("#mytimeseries").html('');
         getSiteInfo();
@@ -652,37 +693,60 @@ $("#timeseries").click(function() {
 
 
 $('#forecast_tab_link').click(function(){
-  Plotly.Plots.resize("forecast_chart");
-  Plotly.relayout("forecast_chart", {
-      'xaxis.autorange': true,
-      'yaxis.autorange': true
+  try{
+    Plotly.Plots.resize("forecast_chart");
+    Plotly.relayout("forecast_chart", {
+        'xaxis.autorange': true,
+        'yaxis.autorange': true
     });
+  }
+  catch(e){
+    console.log(e);
+  }
+
 
 })
 
 $('#mytimeseries_tab_link').click(function(){
-  Plotly.Plots.resize("myDiv");
-  Plotly.relayout("myDiv", {
-      'xaxis.autorange': true,
-      'yaxis.autorange': true
+  try{
+    Plotly.Plots.resize("myDiv");
+    Plotly.relayout("myDiv", {
+        'xaxis.autorange': true,
+        'yaxis.autorange': true
     });
+  }
+  catch(e){
+    console.log(e);
+  }
+
 })
 $('#volumechart_tab_link').click(function(){
-  Plotly.Plots.resize("volume_chart");
-  Plotly.relayout("volume_chart", {
-      'xaxis.autorange': true,
-      'yaxis.autorange': true
+  try{
+    Plotly.Plots.resize("volume_chart");
+    Plotly.relayout("volume_chart", {
+        'xaxis.autorange': true,
+        'yaxis.autorange': true
     });
+  }
+  catch(e){
+    console.log(e);
+  }
+
 })
 $('#siteinfo_tab_link').click(function(){
-  Plotly.Plots.resize("site_sc_chart");
-  Plotly.relayout("site_sc_chart", {
-      'xaxis.autorange': true,
-      'yaxis.autorange': true
+  try{
+    Plotly.Plots.resize("site_sc_chart");
+    Plotly.relayout("site_sc_chart", {
+        'xaxis.autorange': true,
+        'yaxis.autorange': true
     });
-  Plotly.Plots.resize("site_hist_chart");
-  Plotly.relayout("site_hist_chart", {
-      'xaxis.autorange': true,
-      'yaxis.autorange': true
+    Plotly.Plots.resize("site_hist_chart");
+    Plotly.relayout("site_hist_chart", {
+        'xaxis.autorange': true,
+        'yaxis.autorange': true
     });
+  }
+  catch(e){
+    console.log(e);
+  }
 })

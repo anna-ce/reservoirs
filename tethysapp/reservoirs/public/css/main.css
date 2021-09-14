@@ -1,4 +1,7 @@
-
+#thinkpa{
+  display: flex;
+  justify-content: space-between;
+}
 #timeseries{
   margin-top: 10px;
 }
