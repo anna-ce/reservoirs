@@ -313,9 +313,9 @@ def GetForecast(request):
         elevations_avg =[]
         # print(daily_vtotal_max)
         for volume_max, volume_75, volume_avg in zip(daily_vtotal_max,daily_vtotal_75,daily_vtotal_avg):
-            lookup_max = min(range(len(presa_rc_vol)), key=lambda i: abs(presa_rc_vol[i]-(init_elv_r + volume_max/1000000)))
-            lookup_75 = min(range(len(presa_rc_vol)), key=lambda i: abs(presa_rc_vol[i]-(init_elv_r + volume_75/1000000)))
-            lookup_avg = min(range(len(presa_rc_vol)), key=lambda i: abs(presa_rc_vol[i]-(init_elv_r + volume_avg/1000000)))
+            lookup_max = min(range(len(presa_rc_vol)), key=lambda i: abs(presa_rc_vol[i]-(init_vol_r + volume_max/1000000)))
+            lookup_75 = min(range(len(presa_rc_vol)), key=lambda i: abs(presa_rc_vol[i]-(init_vol_r + volume_75/1000000)))
+            lookup_avg = min(range(len(presa_rc_vol)), key=lambda i: abs(presa_rc_vol[i]-(init_vol_r + volume_avg/1000000)))
             # print(abs(presa_rc_vol[0]-(volume_max/1000000)),lookup_max)
             print(lookup_max, volume_max/1000000,init_vol_r,)
             print(lookup_75, volume_75/1000000,init_vol_r)

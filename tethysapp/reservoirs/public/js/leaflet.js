@@ -269,9 +269,12 @@ function getValues() {
               $('#myDiv').addClass('hidden');
               $("#error_ts").html(`${result['error']}`)
             }
-
-
+        },
+        error: function(er){
+          $('#mytimeseries-loading').addClass('hidden');
+          $('#error_ts').addClass('hidden');
         }
+
     })
   }
   catch(e){
@@ -485,10 +488,7 @@ function getSiteInfo() {
             </table>
           </div>`);
         $("#info_site-loading").addClass("hidden");
-        $("#down_r").on("click", function(){
-          dm3();
-          
-        })
+
       }
       catch(e){
         $("#info_site-loading").addClass("hidden");
@@ -497,7 +497,15 @@ function getSiteInfo() {
         $('#error_info').html(`${result.error}`)
       }
 
-    }})
+    },
+
+    error: function(er){
+      $("#info_site-loading").addClass("hidden");
+      $("#container_tabs_info").addClass("hidden");
+      $("#error_info").addClass("hidden");
+    }
+
+    })
   }
   catch(e){
     $("#info_site-loading").addClass("hidden");
@@ -628,7 +636,7 @@ function getForecast() {
                 mode: 'lines',
                 x: mydateTime,
                 y: values_avg2,
-                fill: 'tozeroy',
+                // fill: 'tozeroy',
 
                 // line: {color: '#17BECF'}
               }
@@ -667,7 +675,8 @@ function getForecast() {
                           size: 18,
                           color: '#7f7f7f'
                           }
-                      }
+                      },
+                      autorange:true
                   },
                   autosize:true
               };
@@ -681,7 +690,9 @@ function getForecast() {
                           size: 18,
                           color: '#7f7f7f'
                           }
-                      }
+                      },
+                      autorange:true
+                      
                   },
                   autosize:true
               };
@@ -717,6 +728,14 @@ function getForecast() {
             $('#forecast_chart').addClass('hidden');
             $('#volume_chart').addClass('hidden');
           }
+        },
+        error: function(er){
+          $('#fe-loading').addClass('hidden');
+          $('#fv-loading').addClass('hidden');
+          $('#error_vol').addClass('hidden');
+          $('#error_fore').addClass('hidden');
+          $('#forecast_chart').addClass('hidden');
+          $('#volume_chart').addClass('hidden');
         }
     })
 }
