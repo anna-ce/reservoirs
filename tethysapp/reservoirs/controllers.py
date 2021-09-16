@@ -200,7 +200,7 @@ def GetValues(request):
 def GetForecast(request):
     return_object = {}
     rating_curves_file_path = os.path.join(app.get_app_workspace().path, 'rating_curves_DR.xlsx')
-    rating_curves = pd.read_excel(rating_curves_file_path).dropna()
+    rating_curves = pd.read_excel(rating_curves_file_path)
 
     site_name = request.GET.get("site_name")
     print(site_name)
@@ -215,7 +215,7 @@ def GetForecast(request):
     with open(wlh_json_file_path) as f:
         wlh_data_reservoir = json.load(f)
 
-    df_rc = pd.DataFrame({'volume_rc': [rating_curves[f'{site_name_only}_Vol_MCM']],'elevation_rc': [rating_curves[f'{site_name_only}_Elev_m']]})
+    df_rc = pd.DataFrame({'volume_rc': rating_curves[f'{site_name_only}_Vol_MCM'].tolist(),'elevation_rc': rating_curves[f'{site_name_only}_Elev_m'].tolist()})
     volume_datetime = [0]*15
     daily_vtotal_max = [0]*15
     daily_vtotal_75 = [0]*15
@@ -287,28 +287,44 @@ def GetForecast(request):
                 volume_datetime[i] = date.today() + timedelta(days = i)
                 i = i + 1
 
-        return_object['max2'] = daily_vtotal_max
-        return_object['se52'] = daily_vtotal_75
-        return_object['avg2'] = daily_vtotal_avg
+        presa_rc_vol = df_rc['volume_rc']
+        presa_rc_elev = df_rc['elevation_rc']
+        # print(presa_rc_vol)
+        init_elv_r = wlh_data_reservoir[site_name]['dataValue']
+        lookup_iv = min(range(len(presa_rc_elev)), key=lambda i: abs(presa_rc_elev[i]-init_elv_r))
+        print(len(presa_rc_elev))
+        print(lookup_iv)
+        init_vol_r = presa_rc_vol[lookup_iv]
+        print(init_elv_r)
+
+        return_object['max2'] = [x + (init_vol_r * 1000000)  for x in daily_vtotal_max]
+        return_object['se52'] = [x + (init_vol_r * 1000000)  for x in daily_vtotal_75]
+        return_object['avg2'] = [x + (init_vol_r * 1000000)  for x in daily_vtotal_avg]
+
+        # return_object['max2'] = daily_vtotal_max
+        # return_object['se52'] = daily_vtotal_75
+        # return_object['avg2'] = daily_vtotal_avg
         #volume to elevation
-        presa_rc_vol = df_rc['volume_rc'][0]
-        presa_rc_elev = df_rc['elevation_rc'][0]
-        print(presa_rc_vol)
+
+
         # print(presa_rc_elev)
         elevations_max =[]
         elevations_75 =[]
         elevations_avg =[]
         # print(daily_vtotal_max)
         for volume_max, volume_75, volume_avg in zip(daily_vtotal_max,daily_vtotal_75,daily_vtotal_avg):
-
-            lookup_max = min(range(len(presa_rc_vol)), key=lambda i: abs(presa_rc_vol[i]-(volume_max/1000000)))
-            lookup_75 = min(range(len(presa_rc_vol)), key=lambda i: abs(presa_rc_vol[i]-(volume_75/1000000)))
-            lookup_avg = min(range(len(presa_rc_vol)), key=lambda i: abs(presa_rc_vol[i]-(volume_avg/1000000)))
+            lookup_max = min(range(len(presa_rc_vol)), key=lambda i: abs(presa_rc_vol[i]-(init_elv_r + volume_max/1000000)))
+            lookup_75 = min(range(len(presa_rc_vol)), key=lambda i: abs(presa_rc_vol[i]-(init_elv_r + volume_75/1000000)))
+            lookup_avg = min(range(len(presa_rc_vol)), key=lambda i: abs(presa_rc_vol[i]-(init_elv_r + volume_avg/1000000)))
             # print(abs(presa_rc_vol[0]-(volume_max/1000000)),lookup_max)
+            print(lookup_max, volume_max/1000000,init_vol_r,)
+            print(lookup_75, volume_75/1000000,init_vol_r)
+            print(lookup_avg, volume_avg/1000000,init_vol_r)
+            print(presa_rc_vol)
 
-            matching_elev_max = presa_rc_elev[lookup_max] + wlh_data_reservoir[site_name]['dataValue']
-            matching_elev_75 = presa_rc_elev[lookup_75] + wlh_data_reservoir[site_name]['dataValue']
-            matching_elev_avg = presa_rc_elev[lookup_avg] + wlh_data_reservoir[site_name]['dataValue']
+            matching_elev_max = presa_rc_elev[lookup_max]
+            matching_elev_75 = presa_rc_elev[lookup_75]
+            matching_elev_avg = presa_rc_elev[lookup_avg]
             # print(matching_elev_max,matching_elev_75,matching_elev_avg)
             elevations_max.append(matching_elev_max)
             elevations_75.append(matching_elev_75)
