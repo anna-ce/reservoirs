@@ -88,6 +88,10 @@
                           </div>
                         </div>
                       </div>
+                      <div class="button_class_l">
+                        <button id="sc_button" type="button" class="btn btn-success" name="button"> Download Data </button>
+                      </div>
+
                     </div>
                     <div class="row">
                       <div class=col-sm-8">
@@ -99,6 +103,9 @@
 
                           </div>
                         </div>
+                      </div>
+                      <div class="button_class_l">
+                        <button id="hist_button" type="button" class="btn btn-success" name="button"> Download Data </button>
                       </div>
                     </div>
 
@@ -113,6 +120,9 @@
                   <div class="flex-container-row"><img id="mytimeseries-loading" class="view-file hidden" src="{% static 'reservoirs/images/loader.gif' %}" /></div>
                   <div id="myDiv"></div>
                   <div id="error_ts" class = "hidden"></div>
+                  <div class="button_class_l">
+                    <button id="ts_button" type="button" class="btn btn-success" name="button"> Download Data </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -122,6 +132,9 @@
                   <div class="flex-container-row"><img id="fv-loading" class="view-file hidden" src="{% static 'reservoirs/images/loader.gif' %}" /></div>
                   <div id="volume_chart"></div>
                   <div id="error_vol" class = "hidden"></div>
+                  <div class="button_class_l">
+                    <button id="fv_button" type="button" class="btn btn-success" name="button"> Download Data </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -129,9 +142,11 @@
               <div class="panel panel-default">
                 <div class="panel-body">
                   <div class="flex-container-row"><img id="fe-loading" class="view-file hidden" src="{% static 'reservoirs/images/loader.gif' %}" /></div>
-
                   <div id="forecast_chart"></div>
                   <div id="error_fore" class = "hidden"></div>
+                  <div class="button_class_l">
+                    <button id="fe_button" type="button" class="btn btn-success" name="button"> Download Data </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -140,6 +155,7 @@
         <div id="info" class="hidden"></div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <!-- <button id="down_r" type="button" class="btn btn-primary" name="button"> Download Report </button> -->
         </div>
       </div>
     </div>

@@ -1,4 +1,3 @@
-
 function getSiteInfoTable() {
 
     let full_site_code = $("#variables").val();
@@ -221,6 +220,9 @@ function getValues() {
                   mydateTime.push(specific_values[i]['dateTime'])
               }
 
+              $("#ts_button").on("click",function(){
+                dm(mydateTime,mydatavalues,"M","Time","Water_Level");
+              })
               var values_trace = {
                 type: "scatter",
                 x: mydateTime,
@@ -309,9 +311,22 @@ function getSiteInfo() {
 
         var date_hist = historical_data.map(function (i) { return i[0]})
         var elv_hist = historical_data.map(function (i) { return i[1]})
+        // elv_hist = elv_hist.map( function (i) { if(i<0){return 0} });
+        for(let i=0; i < elv_hist.length; ++i ){
+          if(elv_hist[i] < 0 ){
+            elv_hist[i] = 0;
+          }
+
+        }
         var min_vals_hist = Array(date_hist.length).fill(result.minimum);
         var max_vals_hist = Array(date_hist.length).fill(result.maximum);
-
+        let sc_element = document.getElementById("sc_button");
+        $("#sc_button").click(function(){
+          dm(elvs,vols,"CMC","M","Storage_Capacity_Curve");
+        })
+        $("#hist_button").click(function(){
+          dm(date_hist,elv_hist,"M","Time","Historical_Data");
+        })
 
         let myreservoir = $("#variables").val();
 
@@ -470,6 +485,10 @@ function getSiteInfo() {
             </table>
           </div>`);
         $("#info_site-loading").addClass("hidden");
+        $("#down_r").on("click", function(){
+          dm3();
+          
+        })
       }
       catch(e){
         $("#info_site-loading").addClass("hidden");
@@ -529,6 +548,15 @@ function getForecast() {
               var values_se2 = result.se52;
               var values_max2 = result.max2;
               var mydateTime2 =  result.date2;
+
+              $("#fv_button").on("click", function(){
+                dm2(values_avg,values_se,values_max,mydateTime,"Date","Average Streamflow Forecast Volume (MCM)","75%  Streamflow Forecast Volume (MCM)","Max Streamflow Forecast Volume (MCM)","Forecasted_Volume")
+              })
+              $("#fe_button").on("click", function(){
+                dm2(values_avg2,values_se2,values_max2,mydateTime,"Date","Average Streamflow Forecast Water Elevation (M)","75%  Streamflow Forecast Water Elevation (M)","Max Streamflow Forecast Water Elevation (M)","Forecasted_Water Elevation")
+              })
+
+
               // var init_vol = result.init_vol;
               //
               //
